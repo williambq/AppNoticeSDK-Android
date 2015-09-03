@@ -1,4 +1,4 @@
-App NOTICE SDK Installation & Customization Instructions
+App Notice SDK Installation & Customization Instructions
 ========================================================
 
 *Current version: [v1.0][version]*
