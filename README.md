@@ -1,13 +1,14 @@
-App Notice SDK Installation & Customization Instructions
-========================================================
-
+#App Notice SDK Installation & Customization Instructions
 *Current version: [v1.0][version]*
 August 2015
 
 
-Android Studio Using AAR
-------------------------
+##Prerequisites
+*	Minimum supported Android SDK version: 15
+*	Android Support Library: v7 appcompat library
 
+
+##Android Studio Using AAR
 1. Copy the AppNoticeSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
 2. In your module's AndroidManifest.xml file, inside the application section and below your activities, add these two Ghostery activities:
 
