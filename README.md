@@ -67,7 +67,7 @@ private HashMap<Integer, Boolean> appNotice_privacyPreferences; // Map of non-es
 
   4.	To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
   
-  ```
+    ```
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -123,11 +123,11 @@ protected void onCreate(Bundle savedInstanceState) {
     appNotice = new AppNotice(this);
     appNotice.startConsentFlow(GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
 }
-  ```
+    ```
 
-  1.	The sample code above for the onCreate method calls the initAdMob method three times in various way depending on the user-selected state of the AdMob tracker. Here is an example of how the initialization of the AdMob 3rd-party object can be handled:
+  1. The sample code above for the onCreate method calls the initAdMob method three times in various way depending on the user-selected state of the AdMob tracker. Here is an example of how the initialization of the AdMob 3rd-party object can be handled:
 
-```
+    ```
 private void initAdMob(Boolean isOn) {
     // Load an ad into the AdMob banner view.
     AdView adView = (AdView) findViewById(R.id.adView);
@@ -147,40 +147,40 @@ private void initAdMob(Boolean isOn) {
         Toast.makeText(this, TOAST_TEXT_DISABLE, Toast.LENGTH_LONG).show();
     }
 }
-```
+    ```
 
   2. The AppNotice_Callback handler must override these three methods as shown above:
 
-    1.  **onOptionSelected**: This method is called by the SDK when the user accepts or declines tracking from either the Implied Consent dialog or the Explicit Consent dialog. This method has these two parameters:
-      1.  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
-      2.  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
-    2.  **onNoticeSkipped**: This method is called by the SDK when appNotice.startConsentFlow is called and the SDK determines that a notice dialog does not need to be displayed. This condition can happen when the notice has been displayed the maximum specified times in a session (ghostery_ric_session_max_default), the maximum times in a 30-day period (ghostery_ric_max_default); or if the Explicit Consent notice was accepted previously. The max parameters can be edited in the SDK resources or passed in from the service.
-    3. **onTrackerStateChanged**: This method is called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app. This method has this parameter:
+      1.  **onOptionSelected**: This method is called by the SDK when the user accepts or declines tracking from either the Implied Consent dialog or the Explicit Consent dialog. This method has these two parameters:
+        1.  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
+        2.  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
+      2.  **onNoticeSkipped**: This method is called by the SDK when appNotice.startConsentFlow is called and the SDK determines that a notice dialog does not need to be displayed. This condition can happen when the notice has been displayed the maximum specified times in a session (ghostery_ric_session_max_default), the maximum times in a 30-day period (ghostery_ric_max_default); or if the Explicit Consent notice was accepted previously. The max parameters can be edited in the SDK resources or passed in from the service.
+      3. **onTrackerStateChanged**: This method is called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app. This method has this parameter:
 •	HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
 
-4.	In your callback methods, add code to handle responses as needed.
-  1. In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
-  2. In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code).
-  3. In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
-  4. Notice that the provided sample code above, the code to initialize AdMob has been moved into a new initAdMob method to facilitate the various ways it can be managed. It also included an example of how to turn this tracker off.
+  3.	In your callback methods, add code to handle responses as needed.
+      1. In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
+      2. In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code).
+      3. In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
+      4. Notice that the provided sample code above, the code to initialize AdMob has been moved into a new initAdMob method to facilitate the various ways it can be managed. It also included an example of how to turn this tracker off.
 
-4.	The startConsentFlow method takes these parameters:
-  1. FragmentActivity activity: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
-  2. int company_id: The company ID assigned to you by Ghostery.
-  3. int pub_notice_id: The Pub-notice ID of the configuration created for this app.
-  4. boolean useRemoteValues: True = Try to use the App Notice consent dialog configuration parameters from the service. If the parameters can't be retrieved or are missing, the parameters defined in the resource files will be used. False = Use local resource values where possible. In this case, the only information used from the JSON data is the “bric” parameter to determine if the flow is for Implied Consent or Explicit Consent, and the Tracker data array.
+  4.	The startConsentFlow method takes these parameters:
+      1. FragmentActivity activity: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
+      2. int company_id: The company ID assigned to you by Ghostery.
+      3. int pub_notice_id: The Pub-notice ID of the configuration created for this app.
+      4. boolean useRemoteValues: True = Try to use the App Notice consent dialog configuration parameters from the service. If the parameters can't be retrieved or are missing, the parameters defined in the resource files will be used. False = Use local resource values where possible. In this case, the only information used from the JSON data is the “bric” parameter to determine if the flow is for Implied Consent or Explicit Consent, and the Tracker data array.
 5.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
-```
+  ```
 appNotice.showManagePreferences(GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
-```
+  ```
 
   1.	Since your app is already running at this time, you may not be able to disable or stop all trackers that the user has disabled. In this case, you **must** notify your user that the tracker changes will be applied the next time the app starts up.
 
 6.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
-```
+  ```
 appNotice_privacyPreferences = appNotice.getTrackerPreferences();
 initAdMob(appNotice_privacyPreferences.get(GHOSTERY_TRACKERID_ADMOB));
-```
+  ```
 
 7.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
 
