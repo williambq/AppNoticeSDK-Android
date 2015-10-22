@@ -27,8 +27,10 @@ August 2015
     >
 </activity>
   ```
+
 3. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar:
   1. Add flatDir section to repositories section as shown here:
+
     ```
 repositories {
   mavenCentral()
@@ -37,7 +39,9 @@ repositories {
   }
 }
     ```
+
   2. Add a Library dependency for AppNoticeSDK.aar as shown here:
+
     ```
 dependencies {
     //...
@@ -48,12 +52,14 @@ dependencies {
 4. Integrate the App Notice SDK into your code:
   1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
   2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 4.1 above.
+
     ```
 import com.ghostery.privacy.appnoticesdk.callbacks.AppNotice_Callback;
 import com.ghostery.privacy.appnoticesdk.model.AppNotice;
     ```
 
   3.	Define these class variables in the activity selected in step 4.1 above (**Note: Use your own IDs and values**):
+
     ```
 // Ghostery variables
 // Note: Use your custom values for the Company ID, Notice ID and all or your tracker IDs. These test values won't work in your environment.
@@ -65,7 +71,7 @@ private AppNotice appNotice; // Ghostery App Notice SDK object
 private AppNotice_Callback appNotice_callback; // Ghostery App Notice callback handler
 private HashMap<Integer, Boolean> appNotice_privacyPreferences; // Map of non-essential trackers (by ID) and their on/off states
     ```
-
+
   4.	To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
   
     ```
@@ -171,6 +177,7 @@ private void initAdMob(Boolean isOn) {
       3. int pub_notice_id: The Pub-notice ID of the configuration created for this app.
       4. boolean useRemoteValues: True = Try to use the App Notice consent dialog configuration parameters from the service. If the parameters can't be retrieved or are missing, the parameters defined in the resource files will be used. False = Use local resource values where possible. In this case, the only information used from the JSON data is the “bric” parameter to determine if the flow is for Implied Consent or Explicit Consent, and the Tracker data array.
 5.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
+
   ```
 appNotice.showManagePreferences(GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
   ```
@@ -178,12 +185,14 @@ appNotice.showManagePreferences(GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
   1.	Since your app is already running at this time, you may not be able to disable or stop all trackers that the user has disabled. In this case, you **must** notify your user that the tracker changes will be applied the next time the app starts up.
 
 6.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
+
   ```
 appNotice_privacyPreferences = appNotice.getTrackerPreferences();
 initAdMob(appNotice_privacyPreferences.get(GHOSTERY_TRACKERID_ADMOB));
   ```
 
 7.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
+
   ```
 appNotice.resetSDK();
   ```
