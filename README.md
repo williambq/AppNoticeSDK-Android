@@ -134,7 +134,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
   5. The sample code above for the onCreate method calls the initAdMob method three times in various way depending on the user-selected state of the AdMob tracker. Here is an example of how the initialization of the AdMob 3rd-party object can be handled:
 
-      ```
+    ```
 private void initAdMob(Boolean isOn) {
     // Load an ad into the AdMob banner view.
     AdView adView = (AdView) findViewById(R.id.adView);
@@ -154,7 +154,7 @@ private void initAdMob(Boolean isOn) {
         Toast.makeText(this, TOAST_TEXT_DISABLE, Toast.LENGTH_LONG).show();
     }
 }
-      ```
+    ```
 
   6. The AppNotice_Callback handler must override these three methods as shown above:
 
