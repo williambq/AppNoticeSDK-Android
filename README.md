@@ -8,48 +8,49 @@ August 2015
 Android Studio Using AAR
 ------------------------
 
-1.	Copy the InAppConsentSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
-2.	Add the following configuration information to your module's AndroidManifest.xml file:
-  1. Inside the application section and below your activities, add these two Ghostery activities to the right:
+1. Copy the AppNoticeSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
+2. Add the following configuration information to your module's AndroidManifest.xml file:
+  1. Inside the application section and below your activities, add these two Ghostery activities:
   
 ```
+<!-- Include the Ghostery AddNotice activities -->
 <activity
-    android:name="com.ghostery.privacy.inappconsentsdk.app.TrackerListActivity"
+    android:name="com.ghostery.privacy.appnoticesdk.app.TrackerListActivity"
     android:launchMode="singleInstance"
     android:configChanges="orientation|keyboardHidden|screenSize" android:screenOrientation="unspecified" android:alwaysRetainTaskState="true" android:clearTaskOnLaunch="false"
     >
 </activity>
 <activity
-    android:name="com.ghostery.privacy.inappconsentsdk.app.TrackerDetailActivity"
+    android:name="com.ghostery.privacy.appnoticesdk.app.TrackerDetailActivity"
     android:launchMode="singleInstance"
     android:configChanges="orientation|keyboardHidden|screenSize" android:screenOrientation="unspecified" android:alwaysRetainTaskState="true" android:clearTaskOnLaunch="false"
     >
 </activity>
 ```
-3\.	Modify your module’s build.gradle file to add a dependency for the InAppConsentSDK.aar:
-  1.	Add flatDir section to repositories section as shown here:
-  ```
-  repositories {
-    mavenCentral()
-    flatDir {
-        dirs 'libs' // Allow the .aar file to be found in the libs folder
-    }
+3\.	Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar:
+        1.	Add flatDir section to repositories section as shown here:
+```
+repositories {
+  mavenCentral()
+  flatDir {
+      dirs 'libs' // Allow the .aar file to be found in the libs folder
+  }
 }
 ```
-  2.	Add a Library dependency for InAppConsentSDK.aar as shown here:
-  ```
-  dependencies {
-    …
-    compile 'com.ghostery.privacy.inappconsentsdk:InAppConsentSDK:@aar'
+        2.	Add a Library dependency for AppNoticeSDK.aar as shown here:
+```
+dependencies {
+    //...
+    compile 'com.ghostery.privacy.appnoticesdk:AppNoticeSDK:@aar'
 }
 ```
 
-4\.	Integrate the App Notice SDK into your code:
-  1.	Identify the appropriate location for starting the In-App Consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
-  2.	The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 4.1 above.
-  ```
-  import com.ghostery.privacy.inappconsentsdk.callbacks.InAppConsent_Callback;
-\import com.ghostery.privacy.inappconsentsdk.model.InAppConsent;
+    4\.	Integrate the App Notice SDK into your code:
+        1.	Identify the appropriate location for starting the In-App Consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
+        2.	The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 4.1 above.
+```
+import com.ghostery.privacy.appnoticesdk.callbacks.AppNotice_Callback;
+import com.ghostery.privacy.appnoticesdk.model.AppNotice;
 ```
 
   3.	Define these class variables in the activity selected in step 4.1 above (**Note: Use your own IDs and values**):
@@ -177,7 +178,7 @@ initAdMob(inAppConsent_privacyPreferences.get(GHOSTERY_TRACKERID_ADMOB));
 7\.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes inAppConsent has been initialized as shown earlier):
 
 8\.	Customization via resource files (**optional**):
-  1.	Unzip the InAppConsentSDK.aar file.
+  1.	Unzip the AppNoticeSDK.aar file.
   2.	Edit the strings and colors in ```…\res\values\values.xml```
   3.	Edit layouts in ```…\src\main\res\layout\*.xml```
 
@@ -192,7 +193,7 @@ initAdMob(inAppConsent_privacyPreferences.get(GHOSTERY_TRACKERID_ADMOB));
 | Implied Consent flow dialog | ghostery_impliedinfo_dialogfragment.xml  |
 | Tracker list item           | ghostery_tracker_list_item.xml           |
 
-  4\.	Re-zip the modified files back into InAppConsentSDK.aar and use this modified AAR file in your module.
+  4\.	Re-zip the modified files back into AppNoticeSDK.aar and use this modified AAR file in your module.
 
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
