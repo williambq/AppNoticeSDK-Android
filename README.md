@@ -183,22 +183,25 @@ initAdMob(appNotice_privacyPreferences.get(GHOSTERY_TRACKERID_ADMOB));
   ```
 
 7.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
+  ```
+appNotice.resetSDK();
+  ```
 
 8.	Customization via resource files (**optional**):
   1.	Unzip the AppNoticeSDK.aar file.
   2.	Edit the strings and colors in ```…\res\values\values.xml```
   3.	Edit layouts in ```…\src\main\res\layout\*.xml```
 
-| | |
-| :-----------------------|----------------------------------------------|
-| Tracker Detail activity | ghostery_activity_tracker_detail.xml         |
-| Tracker List activity   | ghostery_activity_tracker_list.xml           |
-| Tracker List activity   | ghostery_explicitinfo_dialogfragment.xml     |
-|Explicit Consent flow dialog | ghostery_explicitinfo_dialogfragment.xml |
-|Tracker Learn More fragment  | ghostery_fragment_learn_more.xml         |
-| Tracker Detail fragment     | ghostery_fragment_tracker_detail.xml     |
-| Implied Consent flow dialog | ghostery_impliedinfo_dialogfragment.xml  |
-| Tracker list item           | ghostery_tracker_list_item.xml           |
+    | **View**| **File to customize**|
+    | :-----------------------|----------------------------------------------|
+    | Tracker Detail activity | ghostery_activity_tracker_detail.xml         |
+    | Tracker List activity   | ghostery_activity_tracker_list.xml           |
+    | Tracker List activity   | ghostery_explicitinfo_dialogfragment.xml     |
+    |Explicit Consent flow dialog | ghostery_explicitinfo_dialogfragment.xml |
+    |Tracker Learn More fragment  | ghostery_fragment_learn_more.xml         |
+    | Tracker Detail fragment     | ghostery_fragment_tracker_detail.xml     |
+    | Implied Consent flow dialog | ghostery_impliedinfo_dialogfragment.xml  |
+    | Tracker list item           | ghostery_tracker_list_item.xml           |
 
   4.	Re-zip the modified files back into AppNoticeSDK.aar and use this modified AAR file in your module.
 
