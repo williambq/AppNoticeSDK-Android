@@ -216,5 +216,13 @@ appNotice.resetSDK();
 
   4.	Re-zip the modified files back into AppNoticeSDK.aar and use this modified AAR file in your module.
 
+##Support Multiple App Versions
+* To support versions of your app that each have a different set of trackers, use unique App Notice configurations in each version of your app.
+* You can use your Ghostery control panel website (https://my.ghosteryenterprise.com) to create an App Notice configuration for each version of your app that has a different combination of trackers.
+* After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you start the App Notice consent flow, use the new value for noticeId in this method call: 
+
+  ```
+appNotice.startConsentFlow(companyId, noticeId, useRemoteValues, this);
+  ```
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
