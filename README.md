@@ -22,7 +22,7 @@ This section covers how to implement the App Notice SDK into an Android Studio p
 1. Copy the AppNoticeSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
 2. In your module's AndroidManifest.xml file, inside the application section and below your activities, add these two Ghostery activities:
 
-  ```
+  ```xml
 <!-- Include the Ghostery AddNotice activities -->
 <activity
     android:name="com.ghostery.privacy.appnoticesdk.app.TrackerListActivity"
@@ -63,14 +63,14 @@ dependencies {
   1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
   2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 4.1 above.
 
-    ```
+    ```java
 import com.ghostery.privacy.appnoticesdk.AppNotice;
 import com.ghostery.privacy.appnoticesdk.callbacks.AppNotice_Callback;
     ```
 
   3.	Define these class variables in the activity selected in step 4.1 above (**Note: Use your own IDs and values**):
 
-    ```
+    ```java
 // Ghostery variables
 // Note: Use your custom values for the Company ID, Notice ID and all or your tracker IDs. These test values won't work in your environment.
 private static final int GHOSTERY_COMPANYID = 242; // My Ghostery company ID (NOTE: Use your value here)
@@ -89,7 +89,7 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
 
   4.	To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
   
-    ```
+    ```java
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -143,7 +143,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
   5. The sample code above for the onCreate method calls the manageTrackers method three times in various way depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs extra handling.
 
-    ```
+    ```java
 private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
 appRestartRequired = false;	// Assume the app doesn't need to be restarted to manage opt-outs
 
@@ -241,7 +241,7 @@ appRestartRequired = false;	// Assume the app doesn't need to be restarted to ma
 
 5.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
 
-  ```
+  ```java
 appNotice.showManagePreferences();
   ```
 
@@ -249,13 +249,13 @@ appNotice.showManagePreferences();
 
 6.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
 
-  ```
+  ```java
 manageTrackers(appNotice.getTrackerPreferences());
   ```
 
 7.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
 
-  ```
+  ```java
 appNotice.resetSDK();
   ```
 
@@ -282,7 +282,7 @@ appNotice.resetSDK();
 * You can use your Ghostery control panel website (https://my.ghosteryenterprise.com) to create an App Notice configuration for each version of your app that has a different combination of trackers.
 * After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call: 
 
-  ```
+  ```java
 appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
   ```
 
