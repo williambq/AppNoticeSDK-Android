@@ -9,7 +9,7 @@ November 2015
 
 
 ##Compliance
-To be in compliance, your app must honor a user's prior consent and withdrawl of consent related to tracking. The associated Triangle app demonstrates one way to do this for two different trackers. The sample code in this ReadMe document is from this Triangle app.
+To be in compliance, your app must honor a user's prior consent and withdrawl of consent related to tracking. The associated [Triangle app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates one way to do this for two different trackers. The sample code in this ReadMe document is from this [Triangle app](https://github.com/ghostery/AppNotice_Triangle_android_aar).
 * __Prior Consent:__ You must get a user's consent before any trackers are started. 
 * __Withdrawl of Consent:__ You must do one of these two things: 
   1. If a tracker is enabled and can be disabled or stopped in the current session, that tracker must be turned off in a way that it is no longer tracking the user in this session and future sessions.
