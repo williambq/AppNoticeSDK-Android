@@ -74,14 +74,14 @@ import com.ghostery.privacy.appnoticesdk.callbacks.AppNotice_Callback;
 // Ghostery variables
 // Note: Use your custom values for the Company ID, Notice ID and all or your tracker IDs. These test values won't work in your environment.
 private static final int GHOSTERY_COMPANYID = 242; // My Ghostery company ID (NOTE: Use your value here)
-private static final int GHOSTERY_CONFIGID = 6690; // The Ghostery configuration ID for this app (NOTE: Use your value here) (Implied)
-//private static final int GHOSTERY_CONFIGID = 6691; // The Ghostery configuration ID for this app (NOTE: Use your value here) (Explicit)
+//private static final int GHOSTERY_CONFIGID = 6690; // The Ghostery configuration ID for this app (NOTE: Use your value here) (Implied)
+private static final int GHOSTERY_CONFIGID = 6691; // The Ghostery configuration ID for this app (NOTE: Use your value here) (Explicit)
 
 // Ghostery tracker IDs (NOTE: you will need to define a variable for each tracker you have in your app)
 private static final int GHOSTERY_TRACKERID_ADMOB = 464; // Tracker ID: AdMob
 private static final int GHOSTERY_TRACKERID_CRASHLYTICS = 3140; // Tracker ID: Crashlytics
 
-private static final boolean GHOSTERY_USEREMOTEVALUES = true; // If true, causes SDK to override local SDK settings with those defined in the Ghostery Admin Portal
+private static final boolean GHOSTERY_USEREMOTEVALUES = false; // If true, causes SDK to override local SDK settings with those defined in the Ghostery Admin Portal
 private AppNotice appNotice; // Ghostery App Notice SDK object
 private AppNotice_Callback appNotice_callback; // Ghostery App Notice callback handler
 boolean appRestartRequired; // Ghostery parameter to track if app needs to be restarted after opt-out
