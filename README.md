@@ -259,24 +259,6 @@ manageTrackers(appNotice.getTrackerPreferences());
 appNotice.resetSDK();
   ```
 
-8.	Customization via resource files (**optional**):
-  1.	Unzip the AppNoticeSDK.aar file.
-  2.	Edit the strings and colors in ```…\res\values\values.xml```
-  3.	Edit layouts in ```…\src\main\res\layout\*.xml```
-
-    | **View**| **File to customize**|
-    | :-----------------------|----------------------------------------------|
-    | Tracker Detail activity | ghostery_activity_tracker_detail.xml         |
-    | Tracker List activity   | ghostery_activity_tracker_list.xml           |
-    | Tracker List activity   | ghostery_explicitinfo_dialogfragment.xml     |
-    |Explicit Consent flow dialog | ghostery_explicitinfo_dialogfragment.xml |
-    |Tracker Learn More fragment  | ghostery_fragment_learn_more.xml         |
-    | Tracker Detail fragment     | ghostery_fragment_tracker_detail.xml     |
-    | Implied Consent flow dialog | ghostery_impliedinfo_dialogfragment.xml  |
-    | Tracker list item           | ghostery_tracker_list_item.xml           |
-
-  4.	Re-zip the modified files back into AppNoticeSDK.aar and use this modified AAR file in your module.
-
 ##Support Multiple App Versions
 * To support versions of your app that each have a different set of trackers, use unique App Notice configurations in each version of your app.
 * You can use your Ghostery control panel website (https://my.ghosteryenterprise.com) to create an App Notice configuration for each version of your app that has a different combination of trackers.
@@ -287,3 +269,92 @@ appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
   ```
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
+
+##Customization Via Resource Files (optional)
+1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
+2. Edit applicable strings and values in the this file: ...\res\values\values.xml
+
+    | **Description**| **Resource String Name**| **Default Value**|
+    | :----------------------------------------------|----------------------------------------------|----------------------------------------------|
+    |Section|<!-- From: file:/.../src/main/res/values/ghostery_strings.xml -->||
+    |Default consent flow type: true = Explicit, false = Implied|ghostery_bric|TRUE|
+    |Section|<!-- From: file:/.../src/main/res/values/ghostery_colors.xml -->||
+    |Background color for both the Implied and the Explicit consent dialogs|ghostery_dialog_background_color|#E5E5E5|
+    |Dialog button color for all but Explicit Decline|ghostery_dialog_button_color|#333333|
+    |Dialog button text color for all but Explicit Decline|ghostery_dialog_explicit_accept_button_text_color|#FFFFFF|
+    |Dialog button color for Explicit Decline|ghostery_dialog_explicit_decline_button_color|#333333|
+    |Dialog button text color for Explicit Decline|ghostery_dialog_explicit_decline_button_text_color|#FFFFFF|
+    |Header text color for both the Implied and the Explicit consent dialogs|ghostery_dialog_header_text_color|#000000|
+    |Message text color for both the Implied and the Explicit consent dialogs|ghostery_dialog_message_text_color|#000000|
+    |Section divider line for both the vendor list and the vendor detail screens|ghostery_divider_color|#46AAAAAA|
+    |Action Bar/Header background color for both the vendor list and the vendor detail screens|ghostery_header_background_color|#009688|
+    |Action Bar/Header text color for both the vendor list and the vendor detail screens|ghostery_header_text_color|#000000|
+    |Vendor list and list item background color|ghostery_list_background|#FFFFFF|
+    |Section|<!-- From: file:/.../src/main/res/values/ghostery_strings.xml -->||
+    |Max times to display the Implied consent flow in a 30-day period|ghostery_ric_max_default|3|
+    |Consent flow dialog opacity (Only used on Android Honeycomb and higher. Must be an integer from 0 to 100. For a value < 100, the dialog will be full screen width.)|ghostery_ric_opacity|100|
+    |Max times to display the Implied consent flow in an app session|ghostery_ric_session_max_default|1|
+    ||ghostery_dialog_button_close|Close|
+    ||ghostery_dialog_button_consent|Accept|
+    ||ghostery_dialog_button_decline|Decline|
+    ||ghostery_dialog_button_preferences|Manage Preferences|
+    ||ghostery_dialog_explicit_message|The Triangle app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.|
+    ||ghostery_dialog_header_text|Triangle Cares About Your Privacy|
+    ||ghostery_dialog_implicit_message|The Triangle app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.|
+    ||ghostery_dialog_pleaseWait|Please Wait...|
+    ||ghostery_manage_preferences_description|Triangle with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.|
+    ||ghostery_manage_preferences_detail_learnmore|To learn more about how we collect and use information for mobile apps, please visit:|
+    ||ghostery_manage_preferences_detail_learnmore_not_provided|Privacy Policy Not Provided|
+    ||ghostery_manage_preferences_detail_trackerinfo|Tracker Info|
+    ||ghostery_manage_preferences_empty_list|The list of trackers could not be loaded. Please ensure you have internet access, and try again later.|
+    ||ghostery_manage_preferences_header|Manage Preferences|
+    ||ghostery_manage_preferences_optin_header|Opt In|
+    ||ghostery_manage_preferences_optin_text|To all trackers listed below.|
+    ||ghostery_manage_preferences_select_all|All|
+    ||ghostery_manage_preferences_select_none|None|
+    ||ghostery_tracker_detail_title|Tracker Detail|
+    ||ghostery_tracker_learnmore_title|Learn More|
+
+  * For example:
+
+  ```xml
+ghostery_manage_preferences_description
+    From "Our company with help from..."
+    To "(YourCompanyName) with help from..."
+ghostery_dialog_header_text
+    From "We Care About Your Privacy"
+    To "(YourCompanyName) Cares About Your Privacy"
+  ```
+
+  * Customization examples for AAR WaterDrop strings:
+  ```xml
+<string name="ghostery_dialog_explicit_message">The WaterDrop app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.</string>
+<string name="ghostery_dialog_header_text">WaterDrop Cares About Your Privacy</string>
+<string name="ghostery_dialog_implicit_message">The WaterDrop app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.</string>
+<string name="ghostery_manage_preferences_description">WaterDrop with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.</string>
+  ```
+
+3. Edit layouts in …\res\layout\*.xml
+
+    |**View**|**File to customize**|
+    |-------------------|--------------------------------|
+    |Tracker Detail activity|ghostery_activity_tracker_detail.xml|
+    |Tracker List activity|ghostery_activity_tracker_list.xml|
+    |Tracker List activity|ghostery_explicitinfo_dialogfragment.xml|
+    |Explicit Consent flow dialog|ghostery_explicitinfo_dialogfragment.xml|
+    |Tracker Learn More fragment|ghostery_fragment_learn_more.xml|
+    |Tracker Detail fragment|ghostery_fragment_tracker_detail.xml|
+    |Implied Consent flow dialog|ghostery_impliedinfo_dialogfragment.xml|
+    |Tracker list item|ghostery_tracker_list_item.xml|
+
+4. Edit or add any desired language/localization files. 
+  1. Edit the English version of the SDK strings here: …\res\values\values.xml
+  2. Edit the other existing language strings here: …\res\values-##\values-##.xml
+    * Where "##" is the two-character language indicator.
+  3. Add folders and XML files for additional languages in this format: …\res\values-##\values-##.xml
+    * Where "##" is the two-character language indicator.
+5. Zip the contents of the unzipped AAR back into a ZIP file
+6. Copy that ZIP file back to libs folder it came from.
+7. Rename this new ZIP file to AppNoticeSDK.aar
+8. Use this customized AppNoticeSDK.aar file in your app as per the  instructions above.
+
