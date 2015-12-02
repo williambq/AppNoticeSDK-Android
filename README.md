@@ -274,51 +274,62 @@ appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
 1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
 2. Edit applicable strings and values in the this file: ...\res\values\values.xml
 
-    | **Description**| **Resource String Name**| **Default Value**|
-    | :----------------------------------------------|----------------------------------------------|----------------------------------------------|
-    |Section|<!-- From: file:/.../src/main/res/values/ghostery_strings.xml -->||
-    |Default consent flow type: true = Explicit, false = Implied|ghostery_bric|TRUE|
-    |Section|<!-- From: file:/.../src/main/res/values/ghostery_colors.xml -->||
-    |Background color for both the Implied and the Explicit consent dialogs|ghostery_dialog_background_color|#E5E5E5|
-    |Dialog button color for all but Explicit Decline|ghostery_dialog_button_color|#333333|
-    |Dialog button text color for all but Explicit Decline|ghostery_dialog_explicit_accept_button_text_color|#FFFFFF|
-    |Dialog button color for Explicit Decline|ghostery_dialog_explicit_decline_button_color|#333333|
-    |Dialog button text color for Explicit Decline|ghostery_dialog_explicit_decline_button_text_color|#FFFFFF|
-    |Header text color for both the Implied and the Explicit consent dialogs|ghostery_dialog_header_text_color|#000000|
-    |Message text color for both the Implied and the Explicit consent dialogs|ghostery_dialog_message_text_color|#000000|
-    |Section divider line for both the vendor list and the vendor detail screens|ghostery_divider_color|#46AAAAAA|
-    |Action Bar/Header background color for both the vendor list and the vendor detail screens|ghostery_header_background_color|#009688|
-    |Action Bar/Header text color for both the vendor list and the vendor detail screens|ghostery_header_text_color|#000000|
-    |Vendor list and list item background color|ghostery_list_background|#FFFFFF|
-    |Section|<!-- From: file:/.../src/main/res/values/ghostery_strings.xml -->||
-    |Max times to display the Implied consent flow in a 30-day period|ghostery_ric_max_default|3|
-    |Consent flow dialog opacity (Only used on Android Honeycomb and higher. Must be an integer from 0 to 100. For a value < 100, the dialog will be full screen width.)|ghostery_ric_opacity|100|
-    |Max times to display the Implied consent flow in an app session|ghostery_ric_session_max_default|1|
-    ||ghostery_dialog_button_close|Close|
-    ||ghostery_dialog_button_consent|Accept|
-    ||ghostery_dialog_button_decline|Decline|
-    ||ghostery_dialog_button_preferences|Manage Preferences|
-    ||ghostery_dialog_explicit_message|The Triangle app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.|
-    ||ghostery_dialog_header_text|Triangle Cares About Your Privacy|
-    ||ghostery_dialog_implicit_message|The Triangle app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.|
-    ||ghostery_dialog_pleaseWait|Please Wait...|
-    ||ghostery_manage_preferences_description|Triangle with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.|
-    ||ghostery_manage_preferences_detail_learnmore|To learn more about how we collect and use information for mobile apps, please visit:|
-    ||ghostery_manage_preferences_detail_learnmore_not_provided|Privacy Policy Not Provided|
-    ||ghostery_manage_preferences_detail_trackerinfo|Tracker Info|
-    ||ghostery_manage_preferences_empty_list|The list of trackers could not be loaded. Please ensure you have internet access, and try again later.|
-    ||ghostery_manage_preferences_header|Manage Preferences|
-    ||ghostery_manage_preferences_optin_header|Opt In|
-    ||ghostery_manage_preferences_optin_text|To all trackers listed below.|
-    ||ghostery_manage_preferences_select_all|All|
-    ||ghostery_manage_preferences_select_none|None|
-    ||ghostery_tracker_detail_title|Tracker Detail|
-    ||ghostery_tracker_learnmore_title|Learn More|
+    <table>
+    <tr><th>Description</th><th><b>Resource String Name</b></th><th><b>Default Value</b></th></tr>
+    <tr><th>From file:</th><td colspan="2">From: file:.../res/values/ghostery_strings.xml</td></tr>
+    <tr><td>Default consent flow type: true = Explicit, false = Implied</td><td>ghostery_bric</td><td>true</td></tr>
+    <tr><th>From file:</th><td colspan="2">.../res/values/ghostery_colors.xml</td></tr>
+    <tr><td>Background color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_background_color</td><td>#E5E5E5</td></tr>
+    <tr><td>Dialog button color for all but Explicit Decline</td><td>ghostery_dialog_button_color</td><td>#333333</td></tr>
+    <tr><td>Dialog button text color for all but Explicit Decline</td><td>ghostery_dialog_explicit_accept_button_text_color</td><td>#FFFFFF</td></tr>
+    <tr><td>Dialog button color for Explicit Decline</td><td>ghostery_dialog_explicit_decline_button_color</td><td>#333333</td></tr>
+    <tr><td>Dialog button text color for Explicit Decline</td><td>ghostery_dialog_explicit_decline_button_text_color</td><td>#FFFFFF</td></tr>
+    <tr><td>Header text color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_header_text_color</td><td>#000000</td></tr>
+    <tr><td>Message text color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_message_text_color</td><td>#000000</td></tr>
+    <tr><td>Section divider line for both the vendor list and the vendor detail screens</td><td>ghostery_divider_color</td><td>#46AAAAAA</td></tr>
+    <tr><td>Action Bar/Header background color for both the vendor list and the vendor detail screens</td><td>ghostery_header_background_color</td><td>#009688</td></tr>
+    <tr><td>Action Bar/Header text color for both the vendor list and the vendor detail screens</td><td>ghostery_header_text_color</td><td>#000000</td></tr>
+    <tr><td>Vendor list and list item background color</td><td>ghostery_list_background</td><td>#FFFFFF</td></tr>
+    <tr><td>Color of the divider used between categories in the vendor list</td><td>ghostery_list_category_divider_color</td><td>#AAAAAA</td></tr>
+    <tr><td>Color of the Category header text in the vendor list</td><td>ghostery_list_category_text_color</td><td>#9FA2A4</td></tr>
+    <tr><td>Color of the divider used between list items in the vendor list (default matches background color so it disapeares)</td><td>ghostery_list_divider_color</td><td>#FFFFFF</td></tr>
+    <tr><td>Color of the vendor name text in the vendor list</td><td>ghostery_list_vendorname_text_color</td><td>#212121</td></tr>
+    <tr><td>Color of the vendor message text at the top of the privacy preferences screen</td><td>ghostery_preferences_message_text_color</td><td>#212121</td></tr>
+    <tr><td>Color of the background for the privacy preferences screen</td><td>ghostery_preferences_optin_background_color</td><td>#FFFFFF</td></tr>
+    <tr><td>Color of the Opt-in subtext on the privacy preferences screen</td><td>ghostery_preferences_optin_subtext_color</td><td>#616161</td></tr>
+    <tr><td>Color of the Opt-in main text and the On and Off control text on the privacy preferences screen</td><td>ghostery_preferences_optin_text_color</td><td>#212121</td></tr>
+    <tr><th>From file:</th><td colspan="2">.../res/values/ghostery_strings.xml</td></tr>
+    <tr><td>Height of the category divider on the privacy preferences screen</td><td>ghostery_list_category_divider_height</td><td>1</td></tr>
+    <tr><td>Height of the list-item divider on the privacy preferences screen</td><td>ghostery_list_divider_height</td><td>0</td></tr>
+    <tr><td>Max times to display the Implied consent flow in a 30-day period</td><td>ghostery_ric_max_default</td><td>3</td></tr>
+    <tr><td>Consent flow dialog opacity (Only used on Android Honeycomb and higher. Must be an integer from 0 to 100. For a value < 100, the dialog will be full screen width.)</td><td>ghostery_ric_opacity</td><td>100</td></tr>
+    <tr><td>Max times to display the Implied consent flow in an app session</td><td>ghostery_ric_session_max_default</td><td>1</td></tr>
+    <tr><td>Text of the close button in the Implied Consent flow dialog</td><td>ghostery_dialog_button_close</td><td>Close</td></tr>
+    <tr><td>Text of the Accept button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_consent</td><td>Accept</td></tr>
+    <tr><td>Text of the Decline button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_decline</td><td>Decline</td></tr>
+    <tr><td>Text of the Manage Preferences button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_preferences</td><td>Manage Preferences</td></tr>
+    <tr><td>Text of the message in the Explicit Consent flow dialog</td><td>ghostery_dialog_explicit_message</td><td>Our app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.</td></tr>
+    <tr><td>Text of the title in both the Explicit Consent and Implied consent flow dialogs</td><td>ghostery_dialog_header_text</td><td>We Care About Your Privacy</td></tr>
+    <tr><td>Text of the message in the Implied Consent flow dialog</td><td>ghostery_dialog_implicit_message</td><td>Our app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.</td></tr>
+    <tr><td>Text of the Please-wait message that is displayed whild downloading the app-notice preferences</td><td>ghostery_dialog_pleaseWait</td><td>Please Wait...</td></tr>
+    <tr><td>Text of the description section near the top of the privacy preferences screen</td><td>ghostery_preferences_description</td><td>Our company with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.</td></tr>
+    <tr><td>Text of the learn-more paragraph above the learn-more link on the vendor detail screen</td><td>ghostery_preferences_detail_learnmore</td><td>To learn more about how we collect and use information for mobile apps, please visit:</td></tr>
+    <tr><td>Text used in the case there is no learn-more link provided</td><td>ghostery_preferences_detail_learnmore_not_provided</td><td>Privacy Policy Not Provided</td></tr>
+    <tr><td>Text for the header above the vendor-info section of the vendor detail screen </td><td>ghostery_preferences_detail_trackerinfo</td><td>Tracker Info</td></tr>
+    <tr><td>Text that is displayed when no vendors are available for display on the privacy preferences screen</td><td>ghostery_preferences_empty_list</td><td>The list of trackers could not be loaded. Please ensure you have internet access, and try again later.</td></tr>
+    <tr><td>Title text on the privacy preferences screen</td><td>ghostery_preferences_header</td><td>Manage Preferences</td></tr>
+    <tr><td>Text of the Opt-in subtext on the privacy preferences screen</td><td>ghostery_preferences_optin_subtext</td><td>To all trackers listed below.</td></tr>
+    <tr><td>Text of the Opt-in main text on the privacy preferences screen</td><td>ghostery_preferences_optin_text</td><td>Opt In</td></tr>
+    <tr><td>Text for the select-all control on the privacy preferences screen</td><td>ghostery_preferences_select_all</td><td>All</td></tr>
+    <tr><td>Text for the select-none control on the privacy preferences screen</td><td>ghostery_preferences_select_none</td><td>None</td></tr>
+    <tr><td>Header text on the vendor detail screen</td><td>ghostery_tracker_detail_title</td><td>Tracker Detail</td></tr>
+    <tr><td>Title text of the learn-more screen</td><td>ghostery_tracker_learnmore_title</td><td>Learn More</td></tr>
+    </table>
 
   * For example:
 
   ```xml
-ghostery_manage_preferences_description
+ghostery_preferences_description
     From "Our company with help from..."
     To "(YourCompanyName) with help from..."
 ghostery_dialog_header_text
@@ -331,21 +342,21 @@ ghostery_dialog_header_text
 <string name="ghostery_dialog_explicit_message">The WaterDrop app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.</string>
 <string name="ghostery_dialog_header_text">WaterDrop Cares About Your Privacy</string>
 <string name="ghostery_dialog_implicit_message">The WaterDrop app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.</string>
-<string name="ghostery_manage_preferences_description">WaterDrop with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.</string>
+<string name="ghostery_preferences_description">WaterDrop with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.</string>
   ```
 
 3. Edit layouts in …\res\layout\*.xml
 
-    |**View**|**File to customize**|
-    |-------------------|--------------------------------|
-    |Tracker Detail activity|ghostery_activity_tracker_detail.xml|
-    |Tracker List activity|ghostery_activity_tracker_list.xml|
-    |Tracker List activity|ghostery_explicitinfo_dialogfragment.xml|
-    |Explicit Consent flow dialog|ghostery_explicitinfo_dialogfragment.xml|
-    |Tracker Learn More fragment|ghostery_fragment_learn_more.xml|
-    |Tracker Detail fragment|ghostery_fragment_tracker_detail.xml|
-    |Implied Consent flow dialog|ghostery_impliedinfo_dialogfragment.xml|
-    |Tracker list item|ghostery_tracker_list_item.xml|
+    **View** | **File to customize**
+    ------------------- | --------------------------------
+    Tracker Detail activity | ghostery_activity_tracker_detail.xml
+    Tracker List activity | ghostery_activity_tracker_list.xml
+    Tracker List activity | ghostery_explicitinfo_dialogfragment.xml
+    Explicit Consent flow dialog | ghostery_explicitinfo_dialogfragment.xml
+    Tracker Learn More fragment | ghostery_fragment_learn_more.xml
+    Tracker Detail fragment | ghostery_fragment_tracker_detail.xml
+    Implied Consent flow dialog | ghostery_impliedinfo_dialogfragment.xml
+    Tracker list item | ghostery_tracker_list_item.xml
 
 4. Edit or add any desired language/localization files. 
   1. Edit the English version of the SDK strings here: …\res\values\values.xml
@@ -357,4 +368,3 @@ ghostery_dialog_header_text
 6. Copy that ZIP file back to libs folder it came from.
 7. Rename this new ZIP file to AppNoticeSDK.aar
 8. Use this customized AppNoticeSDK.aar file in your app as per the  instructions above.
-
