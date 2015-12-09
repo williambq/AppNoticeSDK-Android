@@ -1,6 +1,6 @@
 #App Notice SDK Installation & Customization Instructions
-*Current version: [v1.1.0][version]*
-November 2015
+*Current version: [v1.1.1][version]*
+December 2015
 
 
 ##Prerequisites
@@ -270,63 +270,33 @@ appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
 
-##Customization Via Resource Files (optional)
+##SDK Customization (optional)
+There are two common ways to customize an AAR-based Android SDK. The first is to override the SDK's resource values in your app with values with the same name. The second is to edit the resource values directly in the SDK's AAR file. We explain both of these methods below.
+
+###Customization Option 1: Override Resource Values (optional)
+1. Copy the supplied Ghostery App Notice SDK resource files into your project (the project that includes the SDK).
+2. Edit applicable parameter values in the external resource files:
+  * ...\src\main\res\values\ghostery_colors.xml
+  * ...\src\main\res\values\ghostery_config.xml
+  * ...\src\main\res\values\ghostery_strings.xml (including any of the localized varients)
+3. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
+4. You only need to keep in your project the SDK resource files and parameters that you are customizing. All other may be deleted from your project.
+5. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
+  * ...\src\main\res\values-(2-char localle)\ghostery_strings.xml
+  * See existing Ghostery localization files for an example:
+    * \src\main\res\values-es\ghostery_strings.xml
+6. Build your app normally.
+
+###Customization Option 2: Edit Resource Values in AAR (optional)
 1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
-2. Edit applicable strings and values in the this file: ...\res\values\values.xml
+2. Edit applicable parameter values in the this unzipped file: 
+  * ...\res\values\values.xml
+3. You can find parameter names, descriptions and default values in the external resource files:
+  * ...\src\main\res\values\ghostery_colors.xml
+  * ...\src\main\res\values\ghostery_config.xml
+  * ...\src\main\res\values\ghostery_strings.xml
 
-    <table>
-    <tr><th>Description</th><th><b>Resource String Name</b></th><th><b>Default Value</b></th></tr>
-    <tr><th>From file:</th><td colspan="2">From: file:.../res/values/ghostery_strings.xml</td></tr>
-    <tr><td>Default consent flow type: true = Explicit, false = Implied</td><td>ghostery_bric</td><td>true</td></tr>
-    <tr><th>From file:</th><td colspan="2">.../res/values/ghostery_colors.xml</td></tr>
-    <tr><td>Background color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_background_color</td><td>#E5E5E5</td></tr>
-    <tr><td>Dialog button color for all but Explicit Decline</td><td>ghostery_dialog_button_color</td><td>#333333</td></tr>
-    <tr><td>Dialog button text color for all but Explicit Decline</td><td>ghostery_dialog_explicit_accept_button_text_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Dialog button color for Explicit Decline</td><td>ghostery_dialog_explicit_decline_button_color</td><td>#333333</td></tr>
-    <tr><td>Dialog button text color for Explicit Decline</td><td>ghostery_dialog_explicit_decline_button_text_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Header text color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_header_text_color</td><td>#000000</td></tr>
-    <tr><td>Message text color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_message_text_color</td><td>#000000</td></tr>
-    <tr><td>Section divider line for both the vendor list and the vendor detail screens</td><td>ghostery_divider_color</td><td>#46AAAAAA</td></tr>
-    <tr><td>Action Bar/Header background color for both the vendor list and the vendor detail screens</td><td>ghostery_header_background_color</td><td>#009688</td></tr>
-    <tr><td>Action Bar/Header text color for both the vendor list and the vendor detail screens</td><td>ghostery_header_text_color</td><td>#000000</td></tr>
-    <tr><td>Vendor list and list item background color</td><td>ghostery_list_background</td><td>#FFFFFF</td></tr>
-    <tr><td>Color of the divider used between categories in the vendor list</td><td>ghostery_list_category_divider_color</td><td>#AAAAAA</td></tr>
-    <tr><td>Color of the Category header text in the vendor list</td><td>ghostery_list_category_text_color</td><td>#9FA2A4</td></tr>
-    <tr><td>Color of the divider used between list items in the vendor list (default matches background color so it disapeares)</td><td>ghostery_list_divider_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Color of the vendor name text in the vendor list</td><td>ghostery_list_vendorname_text_color</td><td>#212121</td></tr>
-    <tr><td>Color of the vendor message text at the top of the privacy preferences screen</td><td>ghostery_preferences_message_text_color</td><td>#212121</td></tr>
-    <tr><td>Color of the background for the privacy preferences screen</td><td>ghostery_preferences_optin_background_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Color of the Opt-in subtext on the privacy preferences screen</td><td>ghostery_preferences_optin_subtext_color</td><td>#616161</td></tr>
-    <tr><td>Color of the Opt-in main text and the On and Off control text on the privacy preferences screen</td><td>ghostery_preferences_optin_text_color</td><td>#212121</td></tr>
-    <tr><th>From file:</th><td colspan="2">.../res/values/ghostery_strings.xml</td></tr>
-    <tr><td>Height of the category divider on the privacy preferences screen</td><td>ghostery_list_category_divider_height</td><td>1</td></tr>
-    <tr><td>Height of the list-item divider on the privacy preferences screen</td><td>ghostery_list_divider_height</td><td>0</td></tr>
-    <tr><td>Max times to display the Implied consent flow in a 30-day period</td><td>ghostery_ric_max_default</td><td>3</td></tr>
-    <tr><td>Consent flow dialog opacity (Only used on Android Honeycomb and higher. Must be an integer from 0 to 100. For a value < 100, the dialog will be full screen width.)</td><td>ghostery_ric_opacity</td><td>100</td></tr>
-    <tr><td>Max times to display the Implied consent flow in an app session</td><td>ghostery_ric_session_max_default</td><td>1</td></tr>
-    <tr><td>Text of the close button in the Implied Consent flow dialog</td><td>ghostery_dialog_button_close</td><td>Close</td></tr>
-    <tr><td>Text of the Accept button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_consent</td><td>Accept</td></tr>
-    <tr><td>Text of the Decline button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_decline</td><td>Decline</td></tr>
-    <tr><td>Text of the Manage Preferences button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_preferences</td><td>Manage Preferences</td></tr>
-    <tr><td>Text of the message in the Explicit Consent flow dialog</td><td>ghostery_dialog_explicit_message</td><td>Our app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.</td></tr>
-    <tr><td>Text of the title in both the Explicit Consent and Implied consent flow dialogs</td><td>ghostery_dialog_header_text</td><td>We Care About Your Privacy</td></tr>
-    <tr><td>Text of the message in the Implied Consent flow dialog</td><td>ghostery_dialog_implicit_message</td><td>Our app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.</td></tr>
-    <tr><td>Text of the Please-wait message that is displayed whild downloading the app-notice preferences</td><td>ghostery_dialog_pleaseWait</td><td>Please Wait...</td></tr>
-    <tr><td>Text of the description section near the top of the privacy preferences screen</td><td>ghostery_preferences_description</td><td>Our company with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.</td></tr>
-    <tr><td>Text of the learn-more paragraph above the learn-more link on the vendor detail screen</td><td>ghostery_preferences_detail_learnmore</td><td>To learn more about how we collect and use information for mobile apps, please visit:</td></tr>
-    <tr><td>Text used in the case there is no learn-more link provided</td><td>ghostery_preferences_detail_learnmore_not_provided</td><td>Privacy Policy Not Provided</td></tr>
-    <tr><td>Text for the header above the vendor-info section of the vendor detail screen </td><td>ghostery_preferences_detail_trackerinfo</td><td>Tracker Info</td></tr>
-    <tr><td>Text that is displayed when no vendors are available for display on the privacy preferences screen</td><td>ghostery_preferences_empty_list</td><td>The list of trackers could not be loaded. Please ensure you have internet access, and try again later.</td></tr>
-    <tr><td>Title text on the privacy preferences screen</td><td>ghostery_preferences_header</td><td>Manage Preferences</td></tr>
-    <tr><td>Text of the Opt-in subtext on the privacy preferences screen</td><td>ghostery_preferences_optin_subtext</td><td>To all trackers listed below.</td></tr>
-    <tr><td>Text of the Opt-in main text on the privacy preferences screen</td><td>ghostery_preferences_optin_text</td><td>Opt In</td></tr>
-    <tr><td>Text for the select-all control on the privacy preferences screen</td><td>ghostery_preferences_select_all</td><td>All</td></tr>
-    <tr><td>Text for the select-none control on the privacy preferences screen</td><td>ghostery_preferences_select_none</td><td>None</td></tr>
-    <tr><td>Header text on the vendor detail screen</td><td>ghostery_tracker_detail_title</td><td>Tracker Detail</td></tr>
-    <tr><td>Title text of the learn-more screen</td><td>ghostery_tracker_learnmore_title</td><td>Learn More</td></tr>
-    </table>
-
-  * For example:
+4. For example:
 
   ```xml
 ghostery_preferences_description
