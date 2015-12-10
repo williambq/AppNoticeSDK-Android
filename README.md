@@ -285,7 +285,10 @@ There are two common ways to customize an AAR-based Android SDK. The first is to
   * ...\src\main\res\values-(2-char localle)\ghostery_strings.xml
   * See existing Ghostery localization files for an example:
     * \src\main\res\values-es\ghostery_strings.xml
-6. Build your app normally.
+6. The [Triangle sample app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates these two customizations:
+  * Adds the Spanish localization file from the Ghostery resources and customizes four of the text strings with Triangle branding.
+  * Adds a new Portugese localization file and overides all SDK text strings with Portugese translations. (Note: This file is for  demonstration purposes only.)
+7. Build your app normally.
 
 ###Customization Option 2: Edit Resource Values in AAR (optional)
 1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
