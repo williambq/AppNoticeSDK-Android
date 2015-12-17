@@ -23,7 +23,7 @@ This section covers how to implement the App Notice SDK into an Android Studio p
 2. In your module's AndroidManifest.xml file, inside the application section and below your activities, add these two Ghostery activities:
 
   ```xml
-<!-- Include the Ghostery AddNotice activities -->
+<!-- Include the Ghostery App Notice SDK activities -->
 <activity
     android:name="com.ghostery.privacy.appnoticesdk.app.TrackerListActivity"
     android:launchMode="singleInstance"
@@ -116,7 +116,7 @@ protected void onCreate(Bundle savedInstanceState) {
         }
 
         // Called by the SDK when startConsentFlow is called but the SDK state meets one or more of the following conditions:
-        //   - The Implied Consent dialog has been already been displayed ghostery_ric_session_max_default times in the current session.
+        //   - The Implied Consent dialog has already been displayed ghostery_ric_session_max_default times in the current session.
         //   - The Implied Consent dialog has already been displayed ghostery_ric_max_default times in the last 30 days.
         //   - The Explicit Consent dialog has already been accepted.
         @Override
@@ -141,7 +141,7 @@ protected void onCreate(Bundle savedInstanceState) {
 }
     ```
 
-  5. The sample code above for the onCreate method calls the manageTrackers method three times in various way depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs extra handling.
+  5. The sample code above for the onCreate method calls the manageTrackers method three times in various ways depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs extra handling.
 
     ```java
 private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
@@ -231,7 +231,7 @@ appRestartRequired = false;	// Assume the app doesn't need to be restarted to ma
       * In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
       * In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code).
       * In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
-      * Notice that the provided sample code above, the code to initialize AdMob has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also included an example of how to turn this tracker off.
+      * Notice that the provided sample code above, the code to initialize AdMob, has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also includes an example of how to turn this tracker off.
 
   8.	The startConsentFlow method takes these parameters:
       * FragmentActivity activity: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
@@ -262,7 +262,7 @@ appNotice.resetSDK();
 ##Support Multiple App Versions
 * To support versions of your app that each have a different set of trackers, use unique App Notice configurations in each version of your app.
 * You can use your Ghostery control panel website (https://my.ghosteryenterprise.com) to create an App Notice configuration for each version of your app that has a different combination of trackers.
-* After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call: 
+* After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call:
 
   ```java
 appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
