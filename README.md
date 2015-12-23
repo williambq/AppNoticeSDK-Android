@@ -7,6 +7,9 @@ December 2015
 *	Minimum supported Android SDK version: 15
 *	Android Support Library: v7 appcompat library
 
+##Definitions
+In this documentation, these terms are defined as follows:
+* __Tracker:__ 3rd party SDKs (analytics, ad networks, affiliate tools, etc.) and internal user tracking.
 
 ##Compliance
 To be in compliance, your app must honor a user's prior consent and withdrawl of consent related to tracking. The associated [Triangle app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates one way to do this for two different trackers. The sample code in this ReadMe document is from this [Triangle app](https://github.com/ghostery/AppNotice_Triangle_android_aar).
@@ -229,7 +232,7 @@ appRestartRequired = false;	// Assume the app doesn't need to be restarted to ma
 
   7.	In your callback methods, add code to handle responses as needed.
       * In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
-      * In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code).
+      * In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code and the [Declined Consent Best Practices](#declined-consent-best-practices) section below).
       * In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
       * Notice that the provided sample code above, the code to initialize AdMob, has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also includes an example of how to turn this tracker off.
 
@@ -258,6 +261,13 @@ manageTrackers(appNotice.getTrackerPreferences());
   ```java
 appNotice.resetSDK();
   ```
+
+##Declined Consent Best Practices
+To be in privacy notification compliance, when the SDK calls back to your app and indicates that the user has declined consent, your app can only proceed if all user tracking is disabled. These are options for how to best handle this case:
+* If your app does not require any trackers to provide full functionality, then the app can proceed by disabling all trackers and letting the user continue using the app.
+* If the app does have required trackers that cannot be disabled, then the app must prevent the user from proceeding to use the app, or at least the parts of the app that require trackers.
+If your app will allow the user to continue to use the app with limited functionality, notify the user about the limitations. You could display a dialog with text similar to this: "To enjoy the full functionality of this app, you must either upgrade to the paid version or accept the privacy preferences in this version. Please restart this app if you would like to accept. This app will now continue with limited functionality."
+
 
 ##Support Multiple App Versions
 * To support versions of your app that each have a different set of trackers, use unique App Notice configurations in each version of your app.
