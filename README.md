@@ -290,7 +290,7 @@ There are two common ways to customize an AAR-based Android SDK. The first is to
   * ...\src\main\res\values\ghostery_config.xml
   * ...\src\main\res\values\ghostery_strings.xml (including any of the localized varients)
 3. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
-4. You only need to keep in your project the SDK resource files and parameters that you are customizing. All other may be deleted from your project.
+4. You only need to keep the SDK resource files and parameters in your project that you are customizing. All other may be deleted from your project.
 5. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
   * ...\src\main\res\values-(2-char localle)\ghostery_strings.xml
   * See existing Ghostery localization files for an example:
@@ -347,7 +347,7 @@ ghostery_dialog_header_text
     * Where "##" is the two-character language indicator.
   3. Add folders and XML files for additional languages in this format: …\res\values-##\values-##.xml
     * Where "##" is the two-character language indicator.
-5. Zip the contents of the unzipped AAR back into a ZIP file
+5. Compress the contents of the unzipped AAR back into a ZIP file
 6. Copy that ZIP file back to libs folder it came from.
 7. Rename this new ZIP file to AppNoticeSDK.aar
-8. Use this customized AppNoticeSDK.aar file in your app as per the  instructions above.
+8. Use this customized AppNoticeSDK.aar file in your app as per the instructions above.
