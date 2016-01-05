@@ -1,6 +1,6 @@
-#App Notice SDK Installation & Customization Instructions
-*Current version: [v1.1.1][version]*
-December 2015
+#App Notice SDK for Android<br>Installation and Customization
+*Current version: [v1.1.1][version]*<br>
+January 2016
 
 
 ##Prerequisites
