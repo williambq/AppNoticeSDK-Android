@@ -4,6 +4,7 @@ January 2016
 
 
 ##Prerequisites
+*	A valid App Notice ID from the Ghostery control panel. See [Companion Guide](Ghostery SDK Companion Guide.pdf) for details.
 *	Minimum supported Android SDK version: 15
 *	Android Support Library: v7 appcompat library
 
