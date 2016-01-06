@@ -1,12 +1,16 @@
-#App Notice SDK Installation & Customization Instructions
-*Current version: [v1.1.0][version]*
-November 2015
+#App Notice SDK for Android<br>Installation and Customization
+*Current version: [v1.1.1][version]*<br>
+January 2016
 
 
 ##Prerequisites
+*	A valid App Notice ID from the Ghostery control panel. See [Companion Guide](Ghostery SDK Companion Guide.pdf) for details.
 *	Minimum supported Android SDK version: 15
 *	Android Support Library: v7 appcompat library
 
+##Definitions
+In this documentation, these terms are defined as follows:
+* __Tracker:__ 3rd party SDKs (analytics, ad networks, affiliate tools, etc.) and internal user tracking.
 
 ##Compliance
 To be in compliance, your app must honor a user's prior consent and withdrawl of consent related to tracking. The associated [Triangle app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates one way to do this for two different trackers. The sample code in this ReadMe document is from this [Triangle app](https://github.com/ghostery/AppNotice_Triangle_android_aar).
@@ -23,7 +27,7 @@ This section covers how to implement the App Notice SDK into an Android Studio p
 2. In your module's AndroidManifest.xml file, inside the application section and below your activities, add these two Ghostery activities:
 
   ```xml
-<!-- Include the Ghostery AddNotice activities -->
+<!-- Include the Ghostery App Notice SDK activities -->
 <activity
     android:name="com.ghostery.privacy.appnoticesdk.app.TrackerListActivity"
     android:launchMode="singleInstance"
@@ -116,7 +120,7 @@ protected void onCreate(Bundle savedInstanceState) {
         }
 
         // Called by the SDK when startConsentFlow is called but the SDK state meets one or more of the following conditions:
-        //   - The Implied Consent dialog has been already been displayed ghostery_ric_session_max_default times in the current session.
+        //   - The Implied Consent dialog has already been displayed ghostery_ric_session_max_default times in the current session.
         //   - The Implied Consent dialog has already been displayed ghostery_ric_max_default times in the last 30 days.
         //   - The Explicit Consent dialog has already been accepted.
         @Override
@@ -141,7 +145,7 @@ protected void onCreate(Bundle savedInstanceState) {
 }
     ```
 
-  5. The sample code above for the onCreate method calls the manageTrackers method three times in various way depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs extra handling.
+  5. The sample code above for the onCreate method calls the manageTrackers method three times in various ways depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs extra handling.
 
     ```java
 private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
@@ -229,9 +233,9 @@ appRestartRequired = false;	// Assume the app doesn't need to be restarted to ma
 
   7.	In your callback methods, add code to handle responses as needed.
       * In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
-      * In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code).
+      * In the case where the explicit App Notice process returns false (declined), you should notify the user about the issue, and then lock or close your app before processing any customer tracking (see example code and the [Declined Consent Best Practices](#declined-consent-best-practices) section below).
       * In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
-      * Notice that the provided sample code above, the code to initialize AdMob has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also included an example of how to turn this tracker off.
+      * Notice that the provided sample code above, the code to initialize AdMob, has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also includes an example of how to turn this tracker off.
 
   8.	The startConsentFlow method takes these parameters:
       * FragmentActivity activity: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
@@ -259,10 +263,17 @@ manageTrackers(appNotice.getTrackerPreferences());
 appNotice.resetSDK();
   ```
 
+##Declined Consent Best Practices
+To be in privacy notification compliance, when the SDK calls back to your app and indicates that the user has declined consent, your app can only proceed if all user tracking is disabled. These are options for how to best handle this case:
+* If your app does not require any trackers to provide full functionality, then the app can proceed by disabling all trackers and letting the user continue using the app.
+* If the app does have required trackers that cannot be disabled, then the app must prevent the user from proceeding to use the app, or at least the parts of the app that require trackers.
+If your app will allow the user to continue to use the app with limited functionality, notify the user about the limitations. You could display a dialog with text similar to this: "To enjoy the full functionality of this app, you must either upgrade to the paid version or accept the privacy preferences in this version. Please restart this app if you would like to accept. This app will now continue with limited functionality."
+
+
 ##Support Multiple App Versions
 * To support versions of your app that each have a different set of trackers, use unique App Notice configurations in each version of your app.
 * You can use your Ghostery control panel website (https://my.ghosteryenterprise.com) to create an App Notice configuration for each version of your app that has a different combination of trackers.
-* After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call: 
+* After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call:
 
   ```java
 appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
@@ -270,63 +281,36 @@ appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
 
-##Customization Via Resource Files (optional)
+##SDK Customization (optional)
+There are two common ways to customize an AAR-based Android SDK. The first is to override the SDK's resource values in your app with values with the same name. The second is to edit the resource values directly in the SDK's AAR file. We explain both of these methods below.
+
+###Customization Option 1: Override Resource Values (optional)
+1. Copy the supplied Ghostery App Notice SDK resource files into your project (the project that includes the SDK).
+2. Edit applicable parameter values in the external resource files:
+  * ...\src\main\res\values\ghostery_colors.xml
+  * ...\src\main\res\values\ghostery_config.xml
+  * ...\src\main\res\values\ghostery_strings.xml (including any of the localized varients)
+3. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
+4. You only need to keep the SDK resource files and parameters in your project that you are customizing. All other may be deleted from your project.
+5. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
+  * ...\src\main\res\values-(2-char localle)\ghostery_strings.xml
+  * See existing Ghostery localization files for an example:
+    * \src\main\res\values-es\ghostery_strings.xml
+6. The [Triangle sample app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates these two customizations:
+  * Adds the Spanish localization file from the Ghostery resources and customizes four of the text strings with Triangle branding.
+  * Adds a new Portugese localization file and overides all SDK text strings with Portugese translations. (Note: This file is for  demonstration purposes only.)
+7. Build your app normally.
+
+###Customization Option 2: Edit Resource Values in AAR (optional)
 1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
-2. Edit applicable strings and values in the this file: ...\res\values\values.xml
+2. Edit applicable parameter values in the this unzipped file: 
+  * ...\res\values\values.xml
+3. You can find parameter names, descriptions and default values in the external resource files:
+  * ...\src\main\res\values\ghostery_colors.xml
+  * ...\src\main\res\values\ghostery_config.xml
+  * ...\src\main\res\values\ghostery_strings.xml
 
-    <table>
-    <tr><th>Description</th><th><b>Resource String Name</b></th><th><b>Default Value</b></th></tr>
-    <tr><th>From file:</th><td colspan="2">From: file:.../res/values/ghostery_strings.xml</td></tr>
-    <tr><td>Default consent flow type: true = Explicit, false = Implied</td><td>ghostery_bric</td><td>true</td></tr>
-    <tr><th>From file:</th><td colspan="2">.../res/values/ghostery_colors.xml</td></tr>
-    <tr><td>Background color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_background_color</td><td>#E5E5E5</td></tr>
-    <tr><td>Dialog button color for all but Explicit Decline</td><td>ghostery_dialog_button_color</td><td>#333333</td></tr>
-    <tr><td>Dialog button text color for all but Explicit Decline</td><td>ghostery_dialog_explicit_accept_button_text_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Dialog button color for Explicit Decline</td><td>ghostery_dialog_explicit_decline_button_color</td><td>#333333</td></tr>
-    <tr><td>Dialog button text color for Explicit Decline</td><td>ghostery_dialog_explicit_decline_button_text_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Header text color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_header_text_color</td><td>#000000</td></tr>
-    <tr><td>Message text color for both the Implied and the Explicit consent dialogs</td><td>ghostery_dialog_message_text_color</td><td>#000000</td></tr>
-    <tr><td>Section divider line for both the vendor list and the vendor detail screens</td><td>ghostery_divider_color</td><td>#46AAAAAA</td></tr>
-    <tr><td>Action Bar/Header background color for both the vendor list and the vendor detail screens</td><td>ghostery_header_background_color</td><td>#009688</td></tr>
-    <tr><td>Action Bar/Header text color for both the vendor list and the vendor detail screens</td><td>ghostery_header_text_color</td><td>#000000</td></tr>
-    <tr><td>Vendor list and list item background color</td><td>ghostery_list_background</td><td>#FFFFFF</td></tr>
-    <tr><td>Color of the divider used between categories in the vendor list</td><td>ghostery_list_category_divider_color</td><td>#AAAAAA</td></tr>
-    <tr><td>Color of the Category header text in the vendor list</td><td>ghostery_list_category_text_color</td><td>#9FA2A4</td></tr>
-    <tr><td>Color of the divider used between list items in the vendor list (default matches background color so it disapeares)</td><td>ghostery_list_divider_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Color of the vendor name text in the vendor list</td><td>ghostery_list_vendorname_text_color</td><td>#212121</td></tr>
-    <tr><td>Color of the vendor message text at the top of the privacy preferences screen</td><td>ghostery_preferences_message_text_color</td><td>#212121</td></tr>
-    <tr><td>Color of the background for the privacy preferences screen</td><td>ghostery_preferences_optin_background_color</td><td>#FFFFFF</td></tr>
-    <tr><td>Color of the Opt-in subtext on the privacy preferences screen</td><td>ghostery_preferences_optin_subtext_color</td><td>#616161</td></tr>
-    <tr><td>Color of the Opt-in main text and the On and Off control text on the privacy preferences screen</td><td>ghostery_preferences_optin_text_color</td><td>#212121</td></tr>
-    <tr><th>From file:</th><td colspan="2">.../res/values/ghostery_strings.xml</td></tr>
-    <tr><td>Height of the category divider on the privacy preferences screen</td><td>ghostery_list_category_divider_height</td><td>1</td></tr>
-    <tr><td>Height of the list-item divider on the privacy preferences screen</td><td>ghostery_list_divider_height</td><td>0</td></tr>
-    <tr><td>Max times to display the Implied consent flow in a 30-day period</td><td>ghostery_ric_max_default</td><td>3</td></tr>
-    <tr><td>Consent flow dialog opacity (Only used on Android Honeycomb and higher. Must be an integer from 0 to 100. For a value < 100, the dialog will be full screen width.)</td><td>ghostery_ric_opacity</td><td>100</td></tr>
-    <tr><td>Max times to display the Implied consent flow in an app session</td><td>ghostery_ric_session_max_default</td><td>1</td></tr>
-    <tr><td>Text of the close button in the Implied Consent flow dialog</td><td>ghostery_dialog_button_close</td><td>Close</td></tr>
-    <tr><td>Text of the Accept button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_consent</td><td>Accept</td></tr>
-    <tr><td>Text of the Decline button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_decline</td><td>Decline</td></tr>
-    <tr><td>Text of the Manage Preferences button in the Explicit Consent flow dialog</td><td>ghostery_dialog_button_preferences</td><td>Manage Preferences</td></tr>
-    <tr><td>Text of the message in the Explicit Consent flow dialog</td><td>ghostery_dialog_explicit_message</td><td>Our app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to explicitly tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. To give us your consent, click on the \"Accept\" button.</td></tr>
-    <tr><td>Text of the title in both the Explicit Consent and Implied consent flow dialogs</td><td>ghostery_dialog_header_text</td><td>We Care About Your Privacy</td></tr>
-    <tr><td>Text of the message in the Implied Consent flow dialog</td><td>ghostery_dialog_implicit_message</td><td>Our app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a complete list of these technologies and to tell us whether they can be used on your device, click on the \"Manage Preferences\" button below. Further use of this app will be considered consent.</td></tr>
-    <tr><td>Text of the Please-wait message that is displayed whild downloading the app-notice preferences</td><td>ghostery_dialog_pleaseWait</td><td>Please Wait...</td></tr>
-    <tr><td>Text of the description section near the top of the privacy preferences screen</td><td>ghostery_preferences_description</td><td>Our company with help from our partners, collects data about your use of this app. We respect your privacy and if you would like to limit the data we collect please use the control panel below. To find out more about how we use data please visit our privacy policy.</td></tr>
-    <tr><td>Text of the learn-more paragraph above the learn-more link on the vendor detail screen</td><td>ghostery_preferences_detail_learnmore</td><td>To learn more about how we collect and use information for mobile apps, please visit:</td></tr>
-    <tr><td>Text used in the case there is no learn-more link provided</td><td>ghostery_preferences_detail_learnmore_not_provided</td><td>Privacy Policy Not Provided</td></tr>
-    <tr><td>Text for the header above the vendor-info section of the vendor detail screen </td><td>ghostery_preferences_detail_trackerinfo</td><td>Tracker Info</td></tr>
-    <tr><td>Text that is displayed when no vendors are available for display on the privacy preferences screen</td><td>ghostery_preferences_empty_list</td><td>The list of trackers could not be loaded. Please ensure you have internet access, and try again later.</td></tr>
-    <tr><td>Title text on the privacy preferences screen</td><td>ghostery_preferences_header</td><td>Manage Preferences</td></tr>
-    <tr><td>Text of the Opt-in subtext on the privacy preferences screen</td><td>ghostery_preferences_optin_subtext</td><td>To all trackers listed below.</td></tr>
-    <tr><td>Text of the Opt-in main text on the privacy preferences screen</td><td>ghostery_preferences_optin_text</td><td>Opt In</td></tr>
-    <tr><td>Text for the select-all control on the privacy preferences screen</td><td>ghostery_preferences_select_all</td><td>All</td></tr>
-    <tr><td>Text for the select-none control on the privacy preferences screen</td><td>ghostery_preferences_select_none</td><td>None</td></tr>
-    <tr><td>Header text on the vendor detail screen</td><td>ghostery_tracker_detail_title</td><td>Tracker Detail</td></tr>
-    <tr><td>Title text of the learn-more screen</td><td>ghostery_tracker_learnmore_title</td><td>Learn More</td></tr>
-    </table>
-
-  * For example:
+4. For example:
 
   ```xml
 ghostery_preferences_description
@@ -364,7 +348,7 @@ ghostery_dialog_header_text
     * Where "##" is the two-character language indicator.
   3. Add folders and XML files for additional languages in this format: …\res\values-##\values-##.xml
     * Where "##" is the two-character language indicator.
-5. Zip the contents of the unzipped AAR back into a ZIP file
+5. Compress the contents of the unzipped AAR back into a ZIP file
 6. Copy that ZIP file back to libs folder it came from.
 7. Rename this new ZIP file to AppNoticeSDK.aar
-8. Use this customized AppNoticeSDK.aar file in your app as per the  instructions above.
+8. Use this customized AppNoticeSDK.aar file in your app as per the instructions above.
