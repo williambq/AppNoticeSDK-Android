@@ -1,10 +1,10 @@
 #App Notice SDK for Android<br>Installation and Customization
 *Current version: [v1.1.1][version]*<br>
-January 2016
+Last updated: February 4, 2016
 
 
 ##Prerequisites
-*	A valid App Notice ID from the Ghostery control panel. See [Companion Guide](Ghostery SDK Companion Guide.pdf) for details.
+*	A valid Company ID and App Notice ID from Ghostery. (Contact your Ghostery Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
 *	Minimum supported Android SDK version: 15
 *	Android Support Library: v7 appcompat library
 
@@ -237,11 +237,13 @@ appRestartRequired = false;	// Assume the app doesn't need to be restarted to ma
       * In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
       * Notice that the provided sample code above, the code to initialize AdMob, has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also includes an example of how to turn this tracker off.
 
-  8.	The startConsentFlow method takes these parameters:
+  8.	The AppNotice constructor takes these parameters:
       * FragmentActivity activity: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
-      * int company_id: The company ID assigned to you by Ghostery.
-      * int pub_notice_id: The Pub-notice ID of the configuration created for this app.
-      * boolean useRemoteValues: True = Try to use the App Notice consent dialog configuration parameters from the service. If the parameters can't be retrieved or are missing, the parameters defined in the resource files will be used. False = Use local resource values where possible. In this case, the only information used from the JSON data is the “bric” parameter to determine if the flow is for Implied Consent or Explicit Consent, and the Tracker data array.
+      * int company_id: The Company ID assigned to you by Ghostery.
+      * int app_notice_id: The App Notice ID of the configuration created for this app.
+      * boolean useRemoteValues: 
+        * False (recommended): Use local resource values where possible. In this case, the only information used from the JSON data is the “bric” parameter to determine if the flow is for Implied Consent or Explicit Consent, and the Mobile Tracker data array. 
+        * True: Try to use the App Notice consent dialog configuration parameters from the service. If the parameters can't be retrieved or are missing, the parameters defined in the resource files will be used. (You will need to have your Ghostery Customer Service Manager enter appropriate values in this App Notice Configuration.)
 
 5.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
 
@@ -272,7 +274,7 @@ If your app will allow the user to continue to use the app with limited function
 
 ##Support Multiple App Versions
 * To support versions of your app that each have a different set of trackers, use unique App Notice configurations in each version of your app.
-* You can use your Ghostery control panel website (https://my.ghosteryenterprise.com) to create an App Notice configuration for each version of your app that has a different combination of trackers.
+* Ask your Ghostery Customer Success Manager to create an App Notice configuration for each version of your app that has a different combination of trackers.
 * After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call:
 
   ```java
@@ -281,25 +283,26 @@ appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
 
-##SDK Customization (optional)
+##SDK Customization
 There are two common ways to customize an AAR-based Android SDK. The first is to override the SDK's resource values in your app with values with the same name. The second is to edit the resource values directly in the SDK's AAR file. We explain both of these methods below.
 
-###Customization Option 1: Override Resource Values (optional)
-1. Copy the supplied Ghostery App Notice SDK resource files into your project (the project that includes the SDK).
-2. Edit applicable parameter values in the external resource files:
-  * ...\src\main\res\values\ghostery_colors.xml
-  * ...\src\main\res\values\ghostery_config.xml
-  * ...\src\main\res\values\ghostery_strings.xml (including any of the localized varients)
-3. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
-4. You only need to keep the SDK resource files and parameters in your project that you are customizing. All other may be deleted from your project.
-5. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
+###Customization Option 1: Override Resource Values (recommended)
+1. Copy the supplied Ghostery App Notice SDK resource files from the ...\res\values folder into your project (the project that includes the SDK). In most cases you will only need modify values from these files:
+  * ...\res\values\ghostery_colors.xml
+  * ...\res\values\ghostery_config.xml
+  * ...\res\values\ghostery_strings.xml (including any of the localized varients)
+2. Each of the parameters in these Ghostery resource files has a comment that describes where and how it is used in the SDK. 
+3. Edit applicable parameter values in these copied Ghostery resource files according to the needs of your app. (Note: Do not change the parameter names.)
+4. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
+5. You only need to keep the SDK resource files and parameters in your project that you are customizing. All other may be deleted from your project.
+6. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
   * ...\src\main\res\values-(2-char localle)\ghostery_strings.xml
   * See existing Ghostery localization files for an example:
     * \src\main\res\values-es\ghostery_strings.xml
-6. The [Triangle sample app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates these two customizations:
+7. The [Triangle sample app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates these two customizations:
   * Adds the Spanish localization file from the Ghostery resources and customizes four of the text strings with Triangle branding.
   * Adds a new Portugese localization file and overides all SDK text strings with Portugese translations. (Note: This file is for  demonstration purposes only.)
-7. Build your app normally.
+8. Build your app normally.
 
 ###Customization Option 2: Edit Resource Values in AAR (optional)
 1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
