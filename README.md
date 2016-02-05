@@ -287,21 +287,22 @@ appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_
 There are two common ways to customize an AAR-based Android SDK. The first is to override the SDK's resource values in your app with values with the same name. The second is to edit the resource values directly in the SDK's AAR file. We explain both of these methods below.
 
 ###Customization Option 1: Override Resource Values (recommended)
-1. Copy the supplied Ghostery App Notice SDK resource files into your project (the project that includes the SDK).
-2. Edit applicable parameter values in the external resource files:
-  * ...\src\main\res\values\ghostery_colors.xml
-  * ...\src\main\res\values\ghostery_config.xml
-  * ...\src\main\res\values\ghostery_strings.xml (including any of the localized varients)
-3. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
-4. You only need to keep the SDK resource files and parameters in your project that you are customizing. All other may be deleted from your project.
-5. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
+1. Copy the supplied Ghostery App Notice SDK resource files from the ...\res\values folder into your project (the project that includes the SDK). In most cases you will only need modify values from these files:
+  * ...\res\values\ghostery_colors.xml
+  * ...\res\values\ghostery_config.xml
+  * ...\res\values\ghostery_strings.xml (including any of the localized varients)
+2. Each of the parameters in these Ghostery resource files has a comment that describes where and how it is used in the SDK. 
+3. Edit applicable parameter values in these copied Ghostery resource files according to the needs of your app. (Note: Do not change the parameter names.)
+4. The value each parameter in your project that matches the name of a parameter in the SDK resources will override the value of that SDK parameter.
+5. You only need to keep the SDK resource files and parameters in your project that you are customizing. All other may be deleted from your project.
+6. Add any additional localization resource files to your project according to the pattern of the other Ghostery SDK localization files. For example:
   * ...\src\main\res\values-(2-char localle)\ghostery_strings.xml
   * See existing Ghostery localization files for an example:
     * \src\main\res\values-es\ghostery_strings.xml
-6. The [Triangle sample app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates these two customizations:
+7. The [Triangle sample app](https://github.com/ghostery/AppNotice_Triangle_android_aar) demonstrates these two customizations:
   * Adds the Spanish localization file from the Ghostery resources and customizes four of the text strings with Triangle branding.
   * Adds a new Portugese localization file and overides all SDK text strings with Portugese translations. (Note: This file is for  demonstration purposes only.)
-7. Build your app normally.
+8. Build your app normally.
 
 ###Customization Option 2: Edit Resource Values in AAR (optional)
 1. Unzip AppNoticeSDK.aar to a new folder  outside of your project.
