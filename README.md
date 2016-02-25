@@ -1,11 +1,11 @@
 #App Notice SDK for Android<br>Installation and Customization
-*Current version: [v1.1.1][version]*<br>
-Last updated: February 4, 2016
+*Current version: [v1.1.2][version]*<br>
+Last updated: February 25, 2016
 
 
 ##Prerequisites
 *	A valid Company ID and App Notice ID from Ghostery. (Contact your Ghostery Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
-*	Minimum supported Android SDK version: 15
+*	Minimum supported Android SDK version: 14
 *	Android Support Library: v7 appcompat library
 
 ##Definitions
