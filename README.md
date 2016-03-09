@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
-*Current version: [v1.1.2][version]*<br>
-Last updated: February 25, 2016
+*Current version: [v1.1.3][version]*<br>
+Last updated: March 7, 2016
 
 
 ##Prerequisites
@@ -133,6 +133,17 @@ protected void onCreate(Bundle savedInstanceState) {
         public void onTrackerStateChanged(HashMap<Integer, Boolean> trackerHashMap) {
             manageTrackers(trackerHashMap);
         }
+        
+        // Called by the SDK when the Manage Preferences button is clicked in the consent flow dialog.
+        // Return true if your app has displayed the SDK's manage preferences screen, otherwise, return false.
+        @Override
+        public boolean onManagePreferencesClicked() {
+            // Open hybrid preferences screen
+            Intent i = new Intent(getBaseContext(), HybridPrivacySettings.class);
+            startActivity(i);
+            return true;  // Handled
+        }
+
     };
 
     // Instantiate and start the Ghostery consent flow:
