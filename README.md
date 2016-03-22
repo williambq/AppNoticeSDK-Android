@@ -366,3 +366,7 @@ ghostery_dialog_header_text
 6. Copy that ZIP file back to libs folder it came from.
 7. Rename this new ZIP file to AppNoticeSDK.aar
 8. Use this customized AppNoticeSDK.aar file in your app as per the instructions above.
+
+###Troubleshooting
+* If your app has a mismatch between the Android target SDK (targetSdkVersion) and the Android build libraries (buildToolsVersion), and you are using ProGuard in your app, you may see a compiler warning about not being able to find the referenced method 'android.content.res.ColorStateList getColorStateList'. In this case, you will need to add this line to your ProGuard configuration:
+  * -dontwarn android.content.res.**
