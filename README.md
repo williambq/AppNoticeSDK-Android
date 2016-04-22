@@ -1,10 +1,10 @@
 #App Notice SDK for Android<br>Installation and Customization
-*Current version: [v1.1.6][version]*<br>
-Last updated: April 12, 2016
+*Current version: [v2.0.0][version]*<br>
+Last updated: April 22, 2016
 
 
 ##Prerequisites
-*	A valid Company ID and App Notice ID from Ghostery. (Contact your Ghostery Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
+*	A valid Company ID and Notice ID from Ghostery. (Contact your Ghostery Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
 *	Minimum supported Android SDK version: 14
 *	Android Support Library: v7 appcompat library
 
@@ -20,8 +20,12 @@ To be in compliance, your app must honor a user's prior consent and withdrawl of
   2. If a tracker is enabled and it can NOT be turned off or disabled in the current session, you must notify the user that they will continue to be tracked until the app is restarted. Then when the app is restarted, don't start the specified trackers.
 
 
-##Android Studio Using AAR
-This section covers how to implement the App Notice SDK into an Android Studio project from an AAR file.
+##Upgrade
+To upgrade an existing project to the latest version of the App Notice SDK, see the [Upgrade document](Upgrade.md).
+
+
+##Install the App Notice SDK as an AAR
+This section covers how to implement the App Notice SDK into an Android Studio project using AAR technology.
 
 1. Copy the AppNoticeSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
 2. In your module's AndroidManifest.xml file, inside the application section and below your activities, add these two Ghostery activities:
@@ -78,14 +82,12 @@ import com.ghostery.privacy.appnoticesdk.callbacks.AppNotice_Callback;
 // Ghostery variables
 // Note: Use your custom values for the Company ID, Notice ID and all or your tracker IDs. These test values won't work in your environment.
 private static final int GHOSTERY_COMPANYID = 242; // My Ghostery company ID (NOTE: Use your value here)
-//private static final int GHOSTERY_CONFIGID = 6690; // The Ghostery configuration ID for this app (NOTE: Use your value here) (Implied)
-private static final int GHOSTERY_CONFIGID = 6691; // The Ghostery configuration ID for this app (NOTE: Use your value here) (Explicit)
+private static final int GHOSTERY_NOTICEID = 6691; // The Ghostery Notice ID for this app (NOTE: Use your value here)
 
 // Ghostery tracker IDs (NOTE: you will need to define a variable for each tracker you have in your app)
 private static final int GHOSTERY_TRACKERID_ADMOB = 464; // Tracker ID: AdMob
 private static final int GHOSTERY_TRACKERID_CRASHLYTICS = 3140; // Tracker ID: Crashlytics
 
-private static final boolean GHOSTERY_USEREMOTEVALUES = false; // If true, causes SDK to override local SDK settings with those defined in the Ghostery Admin Portal
 private AppNotice appNotice; // Ghostery App Notice SDK object
 private AppNotice_Callback appNotice_callback; // Ghostery App Notice callback handler
 boolean appRestartRequired; // Ghostery parameter to track if app needs to be restarted after opt-out
@@ -94,153 +96,183 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
   4.	To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
   
     ```java
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-    activity = this;
-
-    // Create the callback handler for the App Notice SDK
-    appNotice_callback = new AppNotice_Callback() {
-
-        // Called by the SDK when the user accepts or declines tracking from one of the consent flow dialogs
         @Override
-        public void onOptionSelected(boolean isAccepted, HashMap<Integer, Boolean> appNotice_privacyPreferences) {
-            // Handle your response
-            if (isAccepted) {
-                manageTrackers(appNotice_privacyPreferences);
-            } else {
-                try {
-                    DeclineConfirmation_DialogFragment dialog = new DeclineConfirmation_DialogFragment();
-                    dialog.show(getFragmentManager(), "DeclineConfirmation_DialogFragment");
-                } catch (IllegalStateException e) {
-                    Log.e(TAG, "Error while trying to display the decline-confirmation dialog.", e);
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            Context context = App.getContext();
+            activity = this;
+
+            // Get the AdMob banner view and set an ad-loaded listner
+            adView = (AdView) findViewById(R.id.adView);
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                // Handle ad-loaded event
                 }
-            }
-        }
+            });
 
-        // Called by the SDK when startConsentFlow is called but the SDK state meets one or more of the following conditions:
-        //   - The Implied Consent dialog has already been displayed ghostery_ric_session_max_default times in the current session.
-        //   - The Implied Consent dialog has already been displayed ghostery_ric_max_default times in the last 30 days.
-        //   - The Explicit Consent dialog has already been accepted.
-        @Override
-        public void onNoticeSkipped() {
-            manageTrackers(appNotice.getTrackerPreferences());
-        }
+            // Create the callback handler for the App Notice SDK
+            appNotice_callback = new AppNotice_Callback() {
 
-        // Called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app
-        @Override
-        public void onTrackerStateChanged(HashMap<Integer, Boolean> trackerHashMap) {
-            manageTrackers(trackerHashMap);
-        }
-        
-        // Called by the SDK when the Manage Preferences button is clicked in the consent flow dialog.
-        // Return true if your app has displayed the SDK's manage preferences screen, otherwise, return false.
-        @Override
-        public boolean onManagePreferencesClicked() {
-            // Open hybrid preferences screen
-            Intent i = new Intent(getBaseContext(), HybridPrivacySettings.class);
-            startActivity(i);
-            return true;  // Handled
-        }
+                // Called by the SDK when the user accepts or declines tracking from one of the consent flow dialogs
+                @Override
+                public void onOptionSelected(boolean isAccepted, HashMap<Integer, Boolean> appNotice_privacyPreferences) {
+                    // Handle your response
+                    if (isAccepted) {
+                        manageTrackers(appNotice_privacyPreferences);
+                    } else {
+                        try {
+                            DeclineConfirmation_DialogFragment dialog = new DeclineConfirmation_DialogFragment();
+                            dialog.show(getFragmentManager(), "DeclineConfirmation_DialogFragment");
+                        } catch (IllegalStateException e) {
+                            Log.e(TAG, "Error while trying to display the decline-confirmation dialog.", e);
+                        }
+                    }
+                }
 
-    };
+                // Called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
+                //   - The Implied Consent dialog has already been displayed ghostery_implied_flow_session_display_max times in the current session.
+                //   - The Implied Consent dialog has already been displayed as required by the ghostery_implied_flow_30day_display_max value (see Ghostery_config.xml for details).
+                //   - The Explicit Consent dialog has already been accepted.
+                @Override
+                public void onNoticeSkipped() {
+                    manageTrackers(appNotice.getTrackerPreferences());
+                }
 
-    // Instantiate and start the Ghostery consent flow:
-    // To be in compliance with honoring a user's prior consent, you must start this consent flow
-    // before any trackers are started. In this demo, all trackers are only started from within
-    // the manageTrackers method, and the manageTrackers method is only called from the App Notice
-    // call-back handler. This ensures that trackers are only started with a users prior consent.
-    appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_CONFIGID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
-    appNotice.startConsentFlow();
-}
+                // Called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app
+                @Override
+                public void onTrackerStateChanged(HashMap<Integer, Boolean> trackerHashMap) {
+                    manageTrackers(trackerHashMap);
+                }
+
+                // Called by the SDK when the Manage Preferences button is clicked in the consent flow dialog.
+                // This optionally gives your app an opportunity to display its own screen. In this case your app will
+                // need to manually display the App Notice SDK manage preferences screen by calling the SDK's showManagePreferences method.
+                // Return true if your app has displayed the SDK's manage preferences screen, otherwise,
+                // return false and the SDK will directly display its manage preferences screen.
+                @Override
+                public boolean onManagePreferencesClicked() {
+                    // Open hybrid preferences screen
+                    Intent i = new Intent(getBaseContext(), HybridPrivacySettings.class);
+                    startActivity(i);
+                    return true;  // Handled
+                }
+
+            };
+
+            // Instantiate and start the Ghostery consent flow:
+            // To be in compliance with honoring a user's prior consent, you must start this consent flow
+            // before any trackers are started. In this demo, all trackers are only started from within
+            // the manageTrackers method, and the manageTrackers method is only called from the App Notice
+            // call-back handler. This ensures that trackers are only started with a users prior consent.
+            appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, appNotice_callback);
+            //appNotice.startExplicitConsentFlow(); // To start an explicit consent flow, OR...
+            appNotice.startImpliedConsentFlow(); // To start an implied consent flow
+        }
     ```
 
   5. The sample code above for the onCreate method calls the manageTrackers method three times in various ways depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs extra handling.
 
     ```java
-private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
-appRestartRequired = false;	// Assume the app doesn't need to be restarted to manage opt-outs
+        private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
+          appRestartRequired = false; // Assume the app doesn't need to be restarted to manage opt-outs
 
-    if (trackerHashMap.size() > 0) {
-        // == Manage AdMob ======================================
-	// This demonstrates how to manage a tracker that can both be enabled and disabled in a
-	// single session. The AdMob tracker is turned on and off as directed by a user's
-	// privacy preferences.
-        Boolean adMobEnabled = trackerHashMap.get(GHOSTERY_TRACKERID_ADMOB) == null? false : trackerHashMap.get(GHOSTERY_TRACKERID_ADMOB);
-        // Get the AdMob banner view
-        AdView adView = (AdView) findViewById(R.id.adView);
+          if (trackerHashMap.size() > 0) {
+            // == Manage AdMob ======================================
+            // This demonstrates how to manage a tracker that can both be enabled and disabled in a
+            // single session. The AdMob tracker is turned on and off as directed by a user's
+            // privacy preferences.
+            Boolean adMobEnabled = trackerHashMap.get(GHOSTERY_TRACKERID_ADMOB) == null? false : trackerHashMap.get(GHOSTERY_TRACKERID_ADMOB);
 
-        if (adMobEnabled) {
-		// Start the AdMob tracker as specified by the user
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.setVisibility(View.VISIBLE);
-            adView.loadAd(adRequest);
+            if (adMobEnabled) {
+              boolean inEmulator = Build.BRAND.toLowerCase().startsWith("generic");
 
-            // Toast the AdMob showing message (optional)
-            Toast.makeText(this, TOAST_ADMOB_ENABLE, Toast.LENGTH_LONG).show();
-        } else {
-		// Stop the AdMob tracker as specified by the user:
-		// To honor a user's withdrawn consent, if a tracker can be turned off or disabled,
-		// that tracker must be turned off in a way that it is no longer tracking the user
-		//  in this session and future sessions.
-            adView.pause();
-            adView.setVisibility(View.GONE);
+              // Start the AdMob tracker as specified by the user
+              // (Note: If there were a way to detect that this tracker were already running, we
+              // could avoid restarting the tracker in that case.)
+              AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
+              if (isTestingAds) {
+                if (inEmulator) {
+                  adRequestBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+                } else {
+                  adRequestBuilder.addTestDevice("8E86E615D3646127F9A6DE11B6E8C533");
+                }
+              }
+              AdRequest adRequest = adRequestBuilder.build();
 
-            // Toast the AdMob disabled message (optional)
-            Toast.makeText(this, TOAST_ADMOB_DISABLE, Toast.LENGTH_LONG).show();
+              adView.setVisibility(View.VISIBLE);
+              adView.bringToFront();
+              adView.loadAd(adRequest);
+
+              // Toast the AdMob showing message (optional)
+              Toast.makeText(this, TOAST_ADMOB_ENABLE, Toast.LENGTH_LONG).show();
+            } else {
+              // Stop the AdMob tracker as specified by the user:
+              // To honor a user's withdrawn consent, if a tracker can be turned off or disabled,
+              // that tracker must be turned off in a way that it is no longer tracking the user
+              //  in this session and future sessions.
+              adView.pause();
+              adView.setVisibility(View.GONE);
+
+              // Toast the AdMob disabled message (optional)
+              Toast.makeText(this, TOAST_ADMOB_DISABLE, Toast.LENGTH_LONG).show();
+            }
+
+
+            // == Manage Crashlytics ================================
+            // This demonstrates how to manage a tracker that can enabled but not disabled in a
+            // single session. The Crashlytics tracker is turned on as directed by a user's
+            // privacy preferences. But when a user requests that this tracker be turned off in the
+            // privacy preferences, this demonstrates one way to notify that user to restart
+            // the app.
+            Boolean crashlyticsEnabled = trackerHashMap.get(GHOSTERY_TRACKERID_CRASHLYTICS) == null? false : trackerHashMap.get(GHOSTERY_TRACKERID_CRASHLYTICS);
+            if (Fabric.isInitialized()) { // Crashlytics is running in this session
+              if (crashlyticsEnabled) {
+                // Toast the Crashlytics is enabled message (optional)
+                Toast.makeText(this, TOAST_CRASHLYTICS_ENABLE, Toast.LENGTH_LONG).show();
+              } else {
+                // Remember to notify the user that an app restart is required to disable this tracker:
+                // To honor a user's withdrawn consent, if a tracker can NOT be turned off or
+                // disabled in the current session, you must notify the user that they will
+                // continue to be tracked until the app is restarted. Then when the app is
+                // restarted, don't start that tracker.
+                appRestartRequired = true;
+              }
+            } else { // Crashlytics has never been started in this session
+              if (crashlyticsEnabled) {
+                // Start the Crashlytics tracker as specified by the user
+                Fabric.with(this, new Crashlytics());
+
+                // Toast the Crashlytics is enabled message (optional)
+                Toast.makeText(this, TOAST_CRASHLYTICS_ENABLE, Toast.LENGTH_LONG).show();
+              } else {
+                // Do nothing: Crashlytics is disabled and not running
+
+                // Toast the Crashlytics is disabled message (optional)
+                Toast.makeText(this, TOAST_CRASHLYTICS_DISABLE, Toast.LENGTH_LONG).show();
+              }
+            }
+
+          } else {
+            Toast.makeText(activity, TOAST_TEXT_NOPREFS, Toast.LENGTH_LONG).show();
+          }
+
         }
-
-
-	// == Manage Crashlytics ================================
-	// This demonstrates how to manage a tracker that can enabled but not disabled in a
-	// single session. The Crashlytics tracker is turned on as directed by a user's
-	// privacy preferences. But when a user requests that this tracker be turned off in the
-	// privacy preferences, this demonstrates one way to notify that user to restart
-	// the app.
-        Boolean crashlyticsEnabled = trackerHashMap.get(GHOSTERY_TRACKERID_CRASHLYTICS) == null? false : trackerHashMap.get(GHOSTERY_TRACKERID_CRASHLYTICS);
-	if (Fabric.isInitialized()) {	// Crashlytics is running in this session
-		if (crashlyticsEnabled) {
-			// Do nothing: Crashlytics is enabled and running
-		} else {
-			// Remember to notify the user that an app restart is required to disable this tracker:
-			// To honor a user's withdrawn consent, if a tracker can NOT be turned off or
-			// disabled in the current session, you must notify the user that they will
-			// continue to be tracked until the app is restarted. Then when the app is
-			// restarted, don't start that tracker.
-			appRestartRequired = true;
-		}
-	} else { // Crashlytics has never been started in this session
-		if (crashlyticsEnabled) {
-			// Start the Crashlytics tracker as specified by the user
-			Fabric.with(this, new Crashlytics());
-
-			// Toast the Crashlytics is enabled message (optional)
-			Toast.makeText(this, TOAST_CRASHLYTICS_ENABLE, Toast.LENGTH_LONG).show();
-		} else {
-			// Do nothing: Crashlytics is disabled and not running
-
-			// Toast the Crashlytics is disabled message (optional)
-			Toast.makeText(this, TOAST_CRASHLYTICS_DISABLE, Toast.LENGTH_LONG).show();
-		}
-	}
-
-    } else {
-        Toast.makeText(activity, TOAST_TEXT_NOPREFS, Toast.LENGTH_LONG).show();
-    }
-
-
-}
     ```
 
-  6. The AppNotice_Callback handler must override these three methods as shown above:
+  6. The AppNotice_Callback handler must override these four methods as shown above:
 
       *  **onOptionSelected**: This method is called by the SDK when the user accepts or declines tracking from either the Implied Consent dialog or the Explicit Consent dialog. This method has these two parameters:
         *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
         *  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
-      *  **onNoticeSkipped**: This method is called by the SDK when appNotice.startConsentFlow is called and the SDK determines that a notice dialog does not need to be displayed. This condition can happen when the notice has been displayed the maximum specified times in a session (ghostery_ric_session_max_default), the maximum times in a 30-day period (ghostery_ric_max_default); or if the Explicit Consent notice was accepted previously. The max parameters can be edited in the SDK resources or passed in from the service.
+      *  **onNoticeSkipped**: This method is called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
+        * The Implied Consent dialog has already been displayed ghostery_implied_flow_session_display_max times in the current session.
+        * The Implied Consent dialog has already been displayed as required by the ghostery_implied_flow_30day_display_max value (see Ghostery_config.xml for details).
+        * The Explicit Consent dialog has already been accepted.
       * **onTrackerStateChanged**: This method is called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app. This method has this parameter:
-        *	HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
+        * HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
+      * **onManagePreferencesClicked**: This method is called by the SDK when the Manage Preferences button is clicked in the consent flow dialog. This optionally gives your app an opportunity to display its own screen. In this case your app will need to manually display the App Notice SDK manage preferences screen by calling the SDK's showManagePreferences method. Return true if your app has displayed the SDK's manage preferences screen, otherwise, return false and the SDK will directly display its manage preferences screen.
 
   7.	In your callback methods, add code to handle responses as needed.
       * In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
@@ -250,11 +282,9 @@ appRestartRequired = false;	// Assume the app doesn't need to be restarted to ma
 
   8.	The AppNotice constructor takes these parameters:
       * FragmentActivity activity: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
-      * int company_id: The Company ID assigned to you by Ghostery.
-      * int app_notice_id: The App Notice ID of the configuration created for this app.
-      * boolean useRemoteValues: 
-        * False (recommended): Use local resource values where possible. In this case, the only information used from the JSON data is the “bric” parameter to determine if the flow is for Implied Consent or Explicit Consent, and the Mobile Tracker data array. 
-        * True: Try to use the App Notice consent dialog configuration parameters from the service. If the parameters can't be retrieved or are missing, the parameters defined in the resource files will be used. (You will need to have your Ghostery Customer Service Manager enter appropriate values in this App Notice Configuration.)
+      * int companyId: The Company ID assigned to you by Ghostery.
+      * int noticeId: The Notice ID of the configuration created for this app.
+      * appNotice_callback: Your app will need to instantiate an AppNotice_Callback object from the SDK and override it's callback methods as described above.
 
 5.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
 
@@ -289,7 +319,7 @@ If your app will allow the user to continue to use the app with limited function
 * After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call:
 
   ```java
-appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, GHOSTERY_USEREMOTEVALUES, appNotice_callback);
+appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, appNotice_callback);
   ```
 
 [version]: https://github.com/ghostery/AppNoticeSDK-Android
