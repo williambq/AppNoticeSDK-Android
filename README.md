@@ -4,7 +4,7 @@ Last updated: April 22, 2016
 
 
 ##Prerequisites
-*	A valid Company ID and Notice ID from Ghostery. (Contact your Ghostery Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
+*	A valid Company ID, Notice ID and the set of Tracker ID's from Ghostery. (Contact your Ghostery Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
 *	Minimum supported Android SDK version: 14
 *	Android Support Library: v7 appcompat library
 
