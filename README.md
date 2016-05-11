@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
 *Current version: [v2.0.1][version]*<br>
-Last updated: May 10, 2016
+Last updated: May 11, 2016
 
 
 ##Prerequisites
@@ -131,9 +131,12 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
                     }
                 }
 
-                // Called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
-                //   - The Implied Consent dialog has already been displayed ghostery_implied_flow_session_display_max times in the current session.
-                //   - The Implied Consent dialog has already been displayed as required by the ghostery_implied_flow_30day_display_max value (see Ghostery_config.xml for details).
+                // Called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called, except when the SDK state meets one or more of the following conditions:
+                //   - The Implied Consent dialog:
+                //     1) Has already been displayed the number of times specified by the parameter to the SDK's startImpliedConsentFlow method.
+                //        0: Displays on first start and every notice ID change (recommended).
+                //        1+: Is the max number of times to display the consent screen on start up in a 30-day period.
+                //     2) Has already been displayed ghostery_implied_flow_session_display_max times in the current session.
                 //   - The Explicit Consent dialog:
                 //     1) In strict mode, consent has already been given;
                 //     2) In lenient mode, the consent screen only displayed on a change in the app-notice configuration, including on first start. It is skipped on all others.
@@ -171,8 +174,10 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
             appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, appNotice_callback);
 
             // Start the implied-consent flow (recommended)
-            appNotice.startImpliedConsentFlow();
-            
+            //   0: Displays on first start and every notice ID change (recommended).
+            //   1+: Is the max number of times to display the consent screen on start up in a 30-day period.
+            appNotice.startImpliedConsentFlow(0);
+
             // (Alternate:)
             // Start the explicit-consent flow in either strict or lenient mode:
             //   true = use strict mode (end user must click Accept to continue).
@@ -276,8 +281,11 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
         *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
         *  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
       *  **onNoticeSkipped**: This method is called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
-        * The Implied Consent dialog has already been displayed ghostery_implied_flow_session_display_max times in the current session.
-        * The Implied Consent dialog has already been displayed as required by the ghostery_implied_flow_30day_display_max value (see Ghostery_config.xml for details).
+        * The Implied Consent dialog:
+            1. Has already been displayed the number of times specified by the parameter to the SDK's startImpliedConsentFlow method.
+                * 0: Displays on first start and every notice ID change (recommended).
+                * 1+: Is the max number of times to display the consent screen on start up in a 30-day period.
+            2. Has already been displayed ghostery_implied_flow_session_display_max times in the current session.
         * The Explicit Consent dialog:
             1. In strict mode, consent has already been given;
             2. In lenient mode, the consent screen only displayed on a change in the app-notice configuration, including on first start. It is skipped on all others.
