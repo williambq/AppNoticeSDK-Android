@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
-*Current version: [v2.0.0][version]*<br>
-Last updated: April 22, 2016
+*Current version: [v2.0.1][version]*<br>
+Last updated: May 31, 2016
 
 
 ##Prerequisites
@@ -28,25 +28,7 @@ To upgrade an existing project to the latest version of the App Notice SDK, see 
 This section covers how to implement the App Notice SDK into an Android Studio project using AAR technology.
 
 1. Copy the AppNoticeSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
-2. In your module's AndroidManifest.xml file, inside the application section and below your activities, add these two Ghostery activities:
-
-  ```xml
-<!-- Include the Ghostery App Notice SDK activities -->
-<activity
-    android:name="com.ghostery.privacy.appnoticesdk.app.TrackerListActivity"
-    android:launchMode="singleInstance"
-    android:configChanges="orientation|keyboardHidden|screenSize" android:screenOrientation="unspecified" android:alwaysRetainTaskState="true" android:clearTaskOnLaunch="false"
-    >
-</activity>
-<activity
-    android:name="com.ghostery.privacy.appnoticesdk.app.TrackerDetailActivity"
-    android:launchMode="singleInstance"
-    android:configChanges="orientation|keyboardHidden|screenSize" android:screenOrientation="unspecified" android:alwaysRetainTaskState="true" android:clearTaskOnLaunch="false"
-    >
-</activity>
-  ```
-
-3. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar:
+2. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar:
   1. Add flatDir section to repositories section as shown here:
 
     ```
@@ -67,7 +49,7 @@ dependencies {
 }
     ```
 
-4. Integrate the App Notice SDK into your code:
+3. Integrate the App Notice SDK into your code:
   1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
   2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 4.1 above.
 
@@ -131,13 +113,18 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
                     }
                 }
 
-                // Called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
-                //   - The Implied Consent dialog has already been displayed ghostery_implied_flow_session_display_max times in the current session.
-                //   - The Implied Consent dialog has already been displayed as required by the ghostery_implied_flow_30day_display_max value (see Ghostery_config.xml for details).
-                //   - The Explicit Consent dialog has already been accepted.
+                // Called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called, except when the SDK state meets one or more of the following conditions:
+                //   - The Implied Consent dialog:
+                //     1) Has already been displayed the number of times specified by the parameter to the SDK's startImpliedConsentFlow method.
+                //        0: Displays on first start and every notice ID change (recommended).
+                //        1+: Is the max number of times to display the consent screen on start up in a 30-day period.
+                //     2) Has already been displayed ghostery_implied_flow_session_display_max times in the current session.
+                //   - The Explicit Consent dialog:
+                //     1) In strict mode, consent has already been given;
+                //     2) In lenient mode, the consent screen only displayed on a change in the app-notice configuration, including on first start. It is skipped on all others.
                 @Override
-                public void onNoticeSkipped() {
-                    manageTrackers(appNotice.getTrackerPreferences());
+                public void onNoticeSkipped(boolean isAccepted, HashMap<Integer, Boolean> trackerHashMap) {
+                    manageTrackers(trackerHashMap);
                 }
 
                 // Called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app
@@ -161,14 +148,23 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
 
             };
 
-            // Instantiate and start the Ghostery consent flow:
+            // Instantiate the App Notice SDK and start either the implied or explicit consent flow:
             // To be in compliance with honoring a user's prior consent, you must start this consent flow
             // before any trackers are started. In this demo, all trackers are only started from within
             // the manageTrackers method, and the manageTrackers method is only called from the App Notice
             // call-back handler. This ensures that trackers are only started with a users prior consent.
             appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, appNotice_callback);
-            //appNotice.startExplicitConsentFlow(); // To start an explicit consent flow, OR...
-            appNotice.startImpliedConsentFlow(); // To start an implied consent flow
+
+            // Start the implied-consent flow (recommended)
+            //   0: Displays on first start and every notice ID change (recommended).
+            //   1+: Is the max number of times to display the consent screen on start up in a 30-day period.
+            appNotice.startImpliedConsentFlow(0);
+
+            // (Alternate:)
+            // Start the explicit-consent flow in either strict or lenient mode:
+            //   true = use strict mode (end user must click Accept to continue).
+            //   false = use lenient mode (on decline, the consent flow screen is only displayed again when the notice ID changes).
+            //appNotice.startExplicitConsentFlow(true);
         }
     ```
 
@@ -267,9 +263,14 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
         *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
         *  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
       *  **onNoticeSkipped**: This method is called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
-        * The Implied Consent dialog has already been displayed ghostery_implied_flow_session_display_max times in the current session.
-        * The Implied Consent dialog has already been displayed as required by the ghostery_implied_flow_30day_display_max value (see Ghostery_config.xml for details).
-        * The Explicit Consent dialog has already been accepted.
+        * The Implied Consent dialog:
+            1. Has already been displayed the number of times specified by the parameter to the SDK's startImpliedConsentFlow method.
+                * 0: Displays on first start and every notice ID change (recommended).
+                * 1+: Is the max number of times to display the consent screen on start up in a 30-day period.
+            2. Has already been displayed ghostery_implied_flow_session_display_max times in the current session.
+        * The Explicit Consent dialog:
+            1. In strict mode, consent has already been given;
+            2. In lenient mode, the consent screen only displayed on a change in the app-notice configuration, including on first start. It is skipped on all others.
       * **onTrackerStateChanged**: This method is called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app. This method has this parameter:
         * HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
       * **onManagePreferencesClicked**: This method is called by the SDK when the Manage Preferences button is clicked in the consent flow dialog. This optionally gives your app an opportunity to display its own screen. In this case your app will need to manually display the App Notice SDK manage preferences screen by calling the SDK's showManagePreferences method. Return true if your app has displayed the SDK's manage preferences screen, otherwise, return false and the SDK will directly display its manage preferences screen.
@@ -286,7 +287,7 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
       * int noticeId: The Notice ID of the configuration created for this app.
       * appNotice_callback: Your app will need to instantiate an AppNotice_Callback object from the SDK and override it's callback methods as described above.
 
-5.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
+4.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
 
   ```java
 appNotice.showManagePreferences();
@@ -294,13 +295,13 @@ appNotice.showManagePreferences();
 
   1.	Since your app is already running at this time, you may not be able to disable or stop all trackers that the user has disabled. In this case, you **must** notify your user that the tracker changes will be applied the next time the app starts up.
 
-6.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
+5.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
 
   ```java
 manageTrackers(appNotice.getTrackerPreferences());
   ```
 
-7.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
+6.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
 
   ```java
 appNotice.resetSDK();
