@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
 *Current version: [v2.1.0][version]*<br>
-Last updated: June 30, 2016
+Last updated: July 19, 2016
 
 
 ##Prerequisites
@@ -236,7 +236,7 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
 
       *  **onOptionSelected**: This method is called by the SDK when the user accepts or declines tracking from either the Implied Consent dialog or the Explicit Consent dialog. This method has these two parameters:
         *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
-        *  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
+        *  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off. **Note:** If the user's device is offline when the App Notice SDK first starts, the returned hashmap object will be empty. This state can be treated as if all optional trackers are on.
       *  **onNoticeSkipped**: This method is called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
         * The Implied Consent dialog:
             1. Has already been displayed the number of times specified by the parameter to the SDK's startImpliedConsentFlow method.
