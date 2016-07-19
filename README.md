@@ -97,11 +97,8 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
                     if (isAccepted) {
                         manageTrackers(appNotice_privacyPreferences);
                     } else {
-                        try {
-                            showMessage(getString(R.string.declineConfirmDialog_title), getString(R.string.declineConfirmDialog_message));
-                        } catch (IllegalStateException e) {
-                            Log.e(TAG, "Error while trying to display the decline-confirmation dialog.", e);
-                        }
+                        // Toast invalid response state
+                        Toast.makeText(activity, R.string.decline_state_error, Toast.LENGTH_LONG).show();
                     }
                 }
     
@@ -235,7 +232,7 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
   6. The AppNotice_Callback handler must override these three methods as shown above:
 
       *  **onOptionSelected**: This method is called by the SDK when the user accepts or declines tracking from either the Implied Consent dialog or the Explicit Consent dialog. This method has these two parameters:
-        *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog.
+        *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog (the false state is deprecated and will be removed in a future version).
         *  HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off. **Note:** If the user's device is offline when the App Notice SDK first starts, the returned hashmap object will be empty. This state can be treated as if all optional trackers are on.
       *  **onNoticeSkipped**: This method is called by the SDK when either startImpliedConsentFlow or startExplicitConsentFlow method is called except when the SDK state meets one or more of the following conditions:
         * The Implied Consent dialog:
