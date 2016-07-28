@@ -27,12 +27,12 @@ To upgrade an existing project to the latest version of the App Notice SDK, see 
 ##Use the App Notice SDK as an AAR
 This section covers how to implement the App Notice SDK into an Android Studio project using AAR technology.
 
-1. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar. Add a Library dependency for AppNoticeSDK.aar as shown here where "x.x.x" is the current SDK library version:
+1. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar. Add a Library dependency for AppNoticeSDK.aar as shown here where "x.y.z" is the current SDK library version:
 
     ```
 dependencies {
     //...
-    compile 'com.ghostery.privacy.appnoticesdk:AppNoticeSDK:x.x.x'
+    compile 'com.ghostery.privacy.appnoticesdk:AppNoticeSDK:x.y.z'
 }
     ```
 
