@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
-*Current version: [v2.1.0][version]*<br>
-Last updated: July 19, 2016
+*Current version: [v2.2.0][version]*<br>
+Last updated: July 28, 2016
 
 
 ##Prerequisites
@@ -24,32 +24,19 @@ To be in compliance, your app must honor a user's prior consent and withdrawl of
 To upgrade an existing project to the latest version of the App Notice SDK, see the [Upgrade document](Upgrade.md).
 
 
-##Install the App Notice SDK as an AAR
+##Use the App Notice SDK as an AAR
 This section covers how to implement the App Notice SDK into an Android Studio project using AAR technology.
 
-1. Copy the AppNoticeSDK.aar file from the AppNotice_aar.zip package into your module's libs folder.
-2. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar:
-  1. Add flatDir section to repositories section as shown here:
-
-    ```
-repositories {
-  mavenCentral()
-  flatDir {
-      dirs 'libs' // Allow the .aar file to be found in the libs folder
-  }
-}
-    ```
-
-  2. Add a Library dependency for AppNoticeSDK.aar as shown here:
+1. Modify your module’s build.gradle file to add a dependency for the AppNoticeSDK.aar. Add a Library dependency for AppNoticeSDK.aar as shown here where "x.x.x" is the current SDK library version:
 
     ```
 dependencies {
     //...
-    compile 'com.ghostery.privacy.appnoticesdk:AppNoticeSDK:@aar'
+    compile 'com.ghostery.privacy.appnoticesdk:AppNoticeSDK:x.x.x'
 }
     ```
 
-3. Integrate the App Notice SDK into your code:
+2. Integrate the App Notice SDK into your code:
   1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
   2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 4.1 above.
 
@@ -258,7 +245,7 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
       * int noticeId: The Notice ID of the configuration created for this app.
       * appNotice_callback: Your app will need to instantiate an AppNotice_Callback object from the SDK and override it's callback methods as described above.
 
-4.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
+3.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
 
   ```java
 appNotice.showManagePreferences();
@@ -266,13 +253,13 @@ appNotice.showManagePreferences();
 
   1.	Since your app is already running at this time, you may not be able to disable or stop all trackers that the user has disabled. In this case, you **must** notify your user that the tracker changes will be applied the next time the app starts up.
 
-5.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
+4.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
 
   ```java
 manageTrackers(appNotice.getTrackerPreferences());
   ```
 
-6.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
+5.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
 
   ```java
 appNotice.resetSDK();
