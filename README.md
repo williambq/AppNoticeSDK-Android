@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
 *Current version: [v2.2.0][version]*<br>
-Last updated: July 28, 2016
+Last updated: August 1, 2016
 
 
 ##Prerequisites
@@ -263,6 +263,13 @@ manageTrackers(appNotice.getTrackerPreferences());
 
   ```java
 appNotice.resetSDK();
+  ```
+
+6.	(Optional) The App Notice SDK makes both the SDK version name and the version code available to the host app via these two static variables:
+
+  ```java
+String AppNotice.sdkVersionName
+int AppNotice.sdkVersionCode
   ```
 
 ##Declined Consent Best Practices
