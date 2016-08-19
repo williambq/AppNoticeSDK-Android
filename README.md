@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
 *Current version: [v2.2.0][version]*<br>
-Last updated: August 1, 2016
+Last updated: August 19, 2016
 
 
 ##Prerequisites
@@ -306,27 +306,49 @@ To change the message on the Consent screen, add the applicable string parameter
 To change the theme of the App Choices SDK from light (default) to dark, add the following style parameter to your app's style resource file:
 ```xml
     <!-- Dark Theme -->
-    <style name="ghostery_AppNoticeTheme.Base" parent="@style/Theme.AppCompat" /> 
+    <style name="ghostery_AppNoticeTheme" parent="ghostery_AppNoticeTheme.Dark" /> 
     <!-- Light Theme (default) -->
-    <style name="ghostery_AppNoticeTheme.Base" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+    <style name="ghostery_AppNoticeTheme" parent="ghostery_AppNoticeTheme" />
 ```
 
 ###Color Customization:
 To change the color of various elements in the App Choices SDK using Material Design colors, add one or more of the following color parameters to your app's color resource file:
 ```xml
-    <!-- Ghostery SDK colors -->
-    <color name="ghosteryColorPrimary">#03A9F4</color>
+    <!-- Ghostery SDK colors - light theme -->
+    <color name="ghosteryColorPrimary">#03a9f4</color>
     <color name="ghosteryColorPrimaryDark">#0288D1</color>
-    <color name="ghosteryColorAccent">#00BCD4</color>
+    <color name="ghosteryColorAccent">#40c4ff</color>
+
+    <!-- Ghostery SDK colors - dark theme -->
+    <color name="ghosteryColorPrimary.Dark">#000000</color>
+    <color name="ghosteryColorPrimaryDark.Dark">#0288D1</color>
+    <color name="ghosteryColorAccent.Dark">#40c4ff</color>
+
+    <!-- Ghostery SDK misc custom colors -->
     <color name="ghosteryColorButtonPrimary">#03A9F4</color>
     <color name="ghosteryColorButtonTextPrimary">#FFFFFF</color>
     <color name="ghosteryColorButtonSecondary">#CCCCCC</color>
     <color name="ghosteryColorButtonTextSecondary">#666666</color>
     <color name="ghosteryColorButtonTextBorderless">#03A9F4</color>
+    <color name="ghosteryColorPrivacyTools">#9FA2A4</color>
 ```
 
 ###Advanced Customization:
 Almost all elements in the App Notice SDK UI are customizable by overiding elements in the SDK's resource files. To get full access to all of the SDK resource files, contact your Ghostery Customer Support Manager (CSM). Ghostery does not support problems caused by this level of customization...proceed at your own risk.
+
+###SDK Configuration Parameters:
+These configuration parameters may be used to modify how the App Notice SDK operates. If you include any of these parameters in your config.xml file, your specified value will override the default value specified in the SDK. The values shown below are the default values.
+
+```xml
+    <!-- Configuration-->
+    <!-- If true, the web-based tab will be shown, else it will not be shown -->
+    <bool name="ghostery_show_web_tab">false</bool>
+
+    <!-- System -->
+    <!-- HTTP connect and read timeouts, in millis -->
+    <integer name="ghostery_http_connect_timeout">15000</integer>
+    <integer name="ghostery_http_read_timeout">10000</integer>
+```
 
 ##Troubleshooting
 * If your app has a mismatch between the Android target SDK (targetSdkVersion) and the Android build libraries (buildToolsVersion), and you are using ProGuard in your app, you may see a compiler warning about not being able to find the referenced method 'android.content.res.ColorStateList getColorStateList'. In this case, you will need to add this line to your ProGuard configuration:
