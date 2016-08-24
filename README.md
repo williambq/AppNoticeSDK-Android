@@ -1,6 +1,6 @@
 #App Notice SDK for Android<br>Installation and Customization
 *Current version: [v2.2.0][version]*<br>
-Last updated: August 19, 2016
+Last updated: August 24, 2016
 
 
 ##Prerequisites
@@ -18,10 +18,6 @@ To be in compliance, your app must honor a user's prior consent and withdrawl of
 * __Withdrawl of Consent:__ You must do one of these two things: 
   1. If a tracker is enabled and can be disabled or stopped in the current session, that tracker must be turned off in a way that it is no longer tracking the user in this session and future sessions.
   2. If a tracker is enabled and it can NOT be turned off or disabled in the current session, you must notify the user that they will continue to be tracked until the app is restarted. Then when the app is restarted, don't start the specified trackers.
-
-
-##Upgrade
-To upgrade an existing project to the latest version of the App Notice SDK, see the [Upgrade document](Upgrade.md).
 
 
 ##Use the App Notice SDK as an AAR
@@ -50,8 +46,7 @@ import com.ghostery.privacy.appnoticesdk.callbacks.AppNotice_Callback;
     ```java
 // Ghostery variables
 // Note: Use your custom values for the Company ID, Notice ID and all or your tracker IDs. These test values won't work in your environment.
-private static final int GHOSTERY_COMPANYID = 242; // My Ghostery company ID (NOTE: Use your value here)
-private static final int GHOSTERY_NOTICEID = 6691; // The Ghostery Notice ID for this app (NOTE: Use your value here)
+private static final String GHOSTERY_TOKEN = "baefa2fb063b4273a636591f8535dcf3"; // My Ghostery App Notice token (NOTE: Use your value here)
 
 // Ghostery tracker IDs (NOTE: you will need to define a variable for each tracker you have in your app)
 private static final int GHOSTERY_TRACKERID_ADMOB = 464; // Tracker ID: AdMob
@@ -115,16 +110,13 @@ boolean appRestartRequired; // Ghostery parameter to track if app needs to be re
             // before any trackers are started. In this demo, all trackers are only started from within
             // the manageTrackers method, and the manageTrackers method is only called from the App Notice
             // call-back handler. This ensures that trackers are only started with a users prior consent.
-            appNotice = new AppNotice(this, GHOSTERY_COMPANYID, GHOSTERY_NOTICEID, appNotice_callback);
+            appNotice = new AppNotice(this, GHOSTERY_TOKEN, appNotice_callback);
 
-            // Start the implied-consent flow (recommended)
-            //   0: Displays on first start and every notice ID change (recommended).
-            //   1+: Is the max number of times to display the consent screen on start up in a 30-day period.
-            appNotice.startImpliedConsentFlow(0);
+            // (Alternate) Example of instantiating the App Notice SDK in explicit mode.
+            // appNotice = new AppNotice(this, GHOSTERY_TOKEN, appNotice_callback, false);
 
-            // (Alternate:)
-            // Start the explicit-consent flow:
-            appNotice.startExplicitConsentFlow();
+            // Start the consent flow:
+            appNotice.startConsentFlow();
         }
     ```
 
