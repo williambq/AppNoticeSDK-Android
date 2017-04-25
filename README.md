@@ -305,10 +305,10 @@ If your app will allow the user to continue to use the app with limited function
 ##Support Multiple App Versions
 * To support versions of your app that each have a different set of trackers, use unique App Notice configurations (with unique tokens) in each version of your app.
 * Ask your Evidon Customer Success Manager to create an App Notice configuration for each version of your app that has a different combination of trackers.
-* After creating an App Notice, be sure to use that App Notice's ID in the applicable version of your app when you interact with the App Notice SDK inside your app. For example, when you instantiate the App Notice consent object, use the new value for noticeId in this method call:
+* After creating an App Notice, be sure to use that App Notice's token in the applicable version of your app when you instantiate the App Notice SDK inside your app. For example, when you instantiate the App Notice object, use the new value for the token in this method call:
 
   ```java
-appNotice = new AppNotice(this, EVIDON_TOKEN, appNotice_callback);
+appNotice = new AppNotice(this, EVIDON_TOKEN, appNotice_callback, IS_IMPLIED_MODE);
   ```
 
 ##SDK Customization
@@ -317,23 +317,25 @@ You can customize text and color in the AAR-based App Notice SDK for Android. Yo
 ###Text Customization:
 To change the message on the Consent screen, add the applicable string parameter to your app's string resource file and customize the text:
 ```xml
-    <!-- Implied Consent message -->
-    <string name="evidon_dialog_implied_message">This app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a list of these technologies and choose whether they can be used, please manage your preferences below. Further use of this app will be considered consent.</string>
-    <!-- Explicit Consent message -->
-    <string name="evidon_dialog_explicit_message">This app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a list of these technologies and choose whether they can be used, please manage your preferences.\n\nBefore proceeding, you must accept, decline or manage your privacy preferences below.</string>
+    <!-- Text of the message nn the Implied Consent screen. -->
+    <string name="evidon_manage_preferences_implied_message">This app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a list of these technologies and choose whether they can be used, please manage your preferences below. Further use of this app will be considered consent.</string>
+    <!-- Text of the message on the Explicit Consent screen. -->
+    <string name="evidon_manage_preferences_explicit_message">This app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a list of these technologies and choose whether they can be used, please manage your preferences.\n\nBefore proceeding, you must accept, decline or manage your privacy preferences below.</string>
 ```
 
 ###Theme Customization:
-To change the theme of the App Choices SDK from light (default) to dark, add the following style parameter to your app's style resource file:
+To change the theme of the App Notice SDK between light (default) and dark, add one of the following style parameter to your app's style resource file:
+```xml
+	<!-- Light Theme (default) -->
+    <style name="evidon_AppNoticeTheme" parent="evidon_AppNoticeTheme" />
+```
 ```xml
     <!-- Dark Theme -->
-    <style name="evidon_AppNoticeTheme" parent="evidon_AppNoticeTheme.Dark" /> 
-    <!-- Light Theme (default) -->
-    <style name="evidon_AppNoticeTheme" parent="evidon_AppNoticeTheme" />
+    <style name="evidon_AppNoticeTheme" parent="evidon_AppNoticeTheme.Base.Dark" />
 ```
 
 ###Color Customization:
-To change the color of various elements in the App Choices SDK using Material Design colors, add one or more of the following color parameters to your app's color resource file:
+To change the color of various elements in the App Notice SDK using Material Design colors, add one or more of the following color parameters to your app's color resource file and customize the colors as desired:
 ```xml
     <!-- Evidon SDK colors - light theme -->
     <color name="evidonColorPrimary">#03a9f4</color>
@@ -365,6 +367,9 @@ These configuration parameters may be used to modify how the App Notice SDK oper
     <!-- If true, the web-based tab will be shown, else it will not be shown -->
     <bool name="evidon_show_web_tab">false</bool>
 
+    <!-- Max times to display the Implied consent flow in an app session. -->
+    <integer name="evidon_implied_flow_session_display_max">1</integer>
+
     <!-- System -->
     <!-- HTTP connect and read timeouts, in millis -->
     <integer name="evidon_http_connect_timeout">15000</integer>
@@ -376,5 +381,3 @@ These configuration parameters may be used to modify how the App Notice SDK oper
 ```xml
     -dontwarn android.content.res.**
 ```
-
-   
