@@ -1,8 +1,0 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Application theme. -->
-    <style name="ghostery_AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-
-</resources>
