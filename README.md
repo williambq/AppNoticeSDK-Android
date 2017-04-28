@@ -4,9 +4,9 @@ Last updated: April 25, 2017
 
 
 ## Prerequisites
-*	A valid App Notice Token and the set of Tracker ID's from Evidon. (Contact your Evidon Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
-*	Minimum supported Android SDK version: 14
-*	Android Support Library: v7 appcompat library
+* A valid App Notice Token and the set of Tracker ID's from Evidon. (Contact your Evidon Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
+* Minimum supported Android SDK version: 14
+* Android Support Library: v7 appcompat library
 
 ## Definitions
 In this documentation, these terms are defined as follows:
@@ -43,15 +43,17 @@ dependencies {
 ```
 
 3. Integrate the App Notice SDK into your code:
-  1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
-  2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 3.1 above.
+
+  3.1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
+
+  3.2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 3.1 above.
 
 ```java
 import com.evidon.privacy.appnoticesdk.AppNotice;
 import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
 ```
 
-  3.	Define these class variables in the activity selected in step 3.1 above (**Note: Use your own IDs and values**):
+  3.3. Define these class variables in the activity selected in step 3.1 above (**Note: Use your own IDs and values**):
 
 ```java
     // Evidon variables
@@ -66,7 +68,7 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
     private AppNotice_Callback appNotice_callback; // Evidon App Notice callback handler
 ```
 
-  4.	To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
+  3.4. To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
 
 ```java
     @Override
@@ -152,7 +154,7 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
     }
 ```
 
-  5. The sample code above for the onCreate method calls the manageTrackers method three times in various ways depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs an app restart.
+  3.5. The sample code above for the onCreate method calls the manageTrackers method three times in various ways depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs an app restart.
 
 ```java
 	private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
@@ -239,7 +241,7 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
     }
 ```
 
-  6. The AppNotice_Callback handler must override these three methods as shown in section 3.4 above:
+  3.6. The AppNotice_Callback handler must override these three methods as shown in section 3.4 above:
 
       *  **onOptionSelected**: This method is called by the SDK when the user accepts or declines tracking from either the Implied Consent dialog or the Explicit Consent dialog. This method has these two parameters:
         *  boolean isAccepted: True if the user clicked Accept on the Explicit Consent dialog or when they close the Implied Consent dialog. False if the user clicked Decline on the Explicit Consent dialog (the false state is deprecated and will be removed in a future version).
@@ -255,44 +257,45 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
       * **onTrackerStateChanged**: This method is called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app. This method has this parameter:
         * HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
 
-  7. In your callback methods, add code to handle responses as needed.
+  3.7. In your callback methods, add code to handle responses as needed.
       * In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
       * **Note:** In the case where the app-user declines the explicit notice, they are blocked from entering the app, so the App Notice process never returns false (declined).
       * In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
       * Notice that the provided sample code above, the code to initialize AdMob, has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also includes an example of how to turn this tracker off.
 
-  8. The AppNotice constructor takes these parameters:
+  3.8. The AppNotice constructor takes these parameters:
       * *FragmentActivity* **activity**: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
       * *String* **appNoticeToken**: The notice token for the configuration created for this app.
       * *AppNotice_Callback* **appNotice_callback**: Your app will need to instantiate an AppNotice_Callback object from the SDK and override it's callback methods as described above.
       * *boolean* **isImpliedMode**: Initialize the SDK in either implied or explicit mode: true = implied; false = explicit.
 
-3.	You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
+4. You can start the Manage Privacy Preferences activity directly from a menu or settings screen in your app by calling this method from a button or menu click handler (Note: This assumes appNotice has been initialized as shown earlier):
 
   ```java
 appNotice.showManagePreferences();
   ```
 
-  1.	Since your app is already running at this time, you may not be able to disable or stop all trackers that the user has disabled. In this case, you **must** notify your user that the tracker changes will be applied the next time the app starts up.
+  4.1. Since your app is already running at this time, you may not be able to disable or stop all trackers that the user has disabled. In this case, you **must** notify your user that the tracker changes will be applied the next time the app starts up.
 
-4.	After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
+5. After the end user has completed one of the SDK consent flows, you can get the current tracker preferences on start up by calling this method (Note: This assumes other code and variables are defined as shown in earlier sample code):
 
   ```java
 manageTrackers(appNotice.getTrackerPreferences());
   ```
 
-5.	As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
+6. As mentioned earlier, the SDK will skip displaying the implied and explicit dialogs depending on acceptance status, session count and 30-day count. To reset these acceptance and count values in the SDK so that you can force the dialogs to be displayed, you can reset the SDK by calling the following method (Note: This assumes appNotice has been initialized as shown earlier):
 
   ```java
 appNotice.resetSDK();
   ```
 
-6.	(Optional) The App Notice SDK makes both the SDK version name and the version code available to the host app via these two static variables:
+7. (Optional) The App Notice SDK makes both the SDK version name and the version code available to the host app via these two static variables:
 
   ```java
 String AppNotice.sdkVersionName
 int AppNotice.sdkVersionCode
   ```
+
 
 ## Declined Consent Best Practices
 To be in privacy notification compliance, when the SDK calls back to your app and indicates that the user has declined consent, your app can only proceed if all user tracking is disabled. These are options for how to best handle this case:
@@ -309,6 +312,7 @@ If your app will allow the user to continue to use the app with limited function
   ```java
 appNotice = new AppNotice(this, EVIDON_TOKEN, appNotice_callback, IS_IMPLIED_MODE);
   ```
+
 
 ## SDK Customization
 You can customize text and color in the AAR-based App Notice SDK for Android. You do this by overriding the SDK's resource values in your app with parameters of the same name.
@@ -374,6 +378,7 @@ These configuration parameters may be used to modify how the App Notice SDK oper
     <integer name="evidon_http_connect_timeout">15000</integer>
     <integer name="evidon_http_read_timeout">10000</integer>
 ```
+
 
 ## Troubleshooting
 * If your app has a mismatch between the Android target SDK (targetSdkVersion) and the Android build libraries (buildToolsVersion), and you are using ProGuard in your app, you may see a compiler warning about not being able to find the referenced method 'android.content.res.ColorStateList getColorStateList'. In this case, you will need to add this line to your ProGuard configuration:
