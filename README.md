@@ -331,7 +331,7 @@ To change the message on the Consent screen, add the applicable string parameter
 To change the theme of the App Notice SDK between light (default) and dark, add one of the following style parameter to your app's style resource file:
 
   ```xml
-	<!-- Light Theme (default) -->
+  <!-- Light Theme (default) -->
   <style name="evidon_AppNoticeTheme" parent="evidon_AppNoticeTheme" />
   ```
 
