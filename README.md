@@ -1,19 +1,18 @@
-
-#App Notice SDK for Android<br>Installation and Customization
-*Current version: [v2.2.0][version]*
+# App Notice SDK for Android<br>Installation and Customization
+*Current version: [v2.2.0][version]*  
 Last updated: April 20, 2017
 
 
-##Prerequisites
+## Prerequisites
 *	A valid App Notice Token and the set of Tracker ID's from Evidon. (Contact your Evidon Customer Success Manager to create or manage your App Notice configuration and to get these IDs.)
 *	Minimum supported Android SDK version: 14
 *	Android Support Library: v7 appcompat library
 
-##Definitions
+## Definitions
 In this documentation, these terms are defined as follows:
 * __Tracker:__ 3rd party SDKs (analytics, ad networks, affiliate tools, etc.) and internal user tracking.
 
-##Compliance
+## Compliance
 To be in compliance, your app must honor a user's prior consent and withdrawl of consent related to tracking. The associated [Triangle app](https://github.com/evidon/AppNotice_Triangle_android_aar) demonstrates one way to do this for two different trackers. The sample code in this ReadMe document is from this [Triangle app](https://github.com/evidon/AppNotice_Triangle_android_aar).
 * __Prior Consent:__ You must get a user's consent before any trackers are started.
 * __Withdrawl of Consent:__ You must do one of these two things: 
@@ -21,40 +20,40 @@ To be in compliance, your app must honor a user's prior consent and withdrawl of
   2. If a tracker is enabled and it can NOT be turned off or disabled in the current session, you must notify the user that they will continue to be tracked until the app is restarted. Then when the app is restarted, don't start the specified trackers.
 
 
-##Use the App Notice SDK as a JCenter Dependency
+## Use the App Notice SDK as a JCenter Dependency
 This section covers how to implement the App Notice SDK into an Android Studio project using an AAR artifact from JCenter.
 
 1. Make sure your project build.gradle file has JCenter listed as a repository as shown here:
 
-    ```
+```
 allprojects {
     repositories {
         jcenter()
     }
 }
-    ```
+```
 
 2. Modify your module build.gradle file to add a dependency for the AppNoticeSDK.aar. Add a dependency for AppNoticeSDK.aar as shown here where "x.y.z" is the current SDK library version:
 
-    ```
+```
 dependencies {
     //...
     compile 'com.ghostery.privacy.appnoticesdk:AppNoticeSDK:x.y.z'
 }
-    ```
+```
 
 3. Integrate the App Notice SDK into your code:
   1. Identify the appropriate location for starting the App Notice consent process. This is usually in the onCreate method of your main/start-up activity and should be before starting any user tracking or monitoring.
   2. The Android Studio SDK should automatically add these includes for you when the SDK code is added to your project. But if you need to add them manually, add these includes in the include section of the activity selected in step 3.1 above.
 
-    ```java
+```java
 import com.evidon.privacy.appnoticesdk.AppNotice;
 import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
-    ```
+```
 
   3.	Define these class variables in the activity selected in step 3.1 above (**Note: Use your own IDs and values**):
 
-    ```java
+```java
     // Evidon variables
     // Note: Use your custom values for the Company ID, Notice ID and all or your tracker IDs. These test values won't work in your environment.
     private static final String EVIDON_TOKEN = "93cf713eb6cf45348563183d6d9d7184"; // My Evidon App Notice token (NOTE: Use your value here)
@@ -65,11 +64,11 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
 
     private static AppNotice appNotice; // Evidon App Notice SDK object
     private AppNotice_Callback appNotice_callback; // Evidon App Notice callback handler
-    ```
+```
 
   4.	To start the App Notice process, you will need to create an App Notice call-back handler, instantiate the AppNotice object, and then start the App Notice flow as shown in the following example code:
 
-    ```java
+```java
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,11 +150,11 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
             appNotice.startConsentFlow();
         }
     }
-    ```
+```
 
   5. The sample code above for the onCreate method calls the manageTrackers method three times in various ways depending on the user-selected state of the AdMob tracker. Here is an example of how the management of two trackers can be handled. Note that the AdMob tracker can be enabled and disabled in a single session, but for this demo, the Crashlytics tracker cannot be disabled once it is running and needs an app restart.
 
-    ```java
+```java
 	private void manageTrackers(HashMap<Integer, Boolean> trackerHashMap) {
         appRestartRequired = false;    // Assume the app doesn't need to be restarted to manage opt-outs
 
@@ -238,7 +237,7 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
             Toast.makeText(activity, TOAST_TEXT_NOPREFS, Toast.LENGTH_LONG).show();
         }
     }
-    ```
+```
 
   6. The AppNotice_Callback handler must override these three methods as shown in section 3.4 above:
 
@@ -295,7 +294,7 @@ String AppNotice.sdkVersionName
 int AppNotice.sdkVersionCode
   ```
 
-##Declined Consent Best Practices
+## Declined Consent Best Practices
 To be in privacy notification compliance, when the SDK calls back to your app and indicates that the user has declined consent, your app can only proceed if all user tracking is disabled. These are options for how to best handle this case:
 * If your app does not require any trackers to provide full functionality, then the app can proceed by disabling all trackers and letting the user continue using the app.
 * If the app does have required trackers that cannot be disabled, then the app must prevent the user from proceeding to use the app, or at least the parts of the app that require trackers.
@@ -311,10 +310,10 @@ If your app will allow the user to continue to use the app with limited function
 appNotice = new AppNotice(this, EVIDON_TOKEN, appNotice_callback, IS_IMPLIED_MODE);
   ```
 
-##SDK Customization
+## SDK Customization
 You can customize text and color in the AAR-based App Notice SDK for Android. You do this by overriding the SDK's resource values in your app with parameters of the same name.
 
-###Text Customization:
+### Text Customization:
 To change the message on the Consent screen, add the applicable string parameter to your app's string resource file and customize the text:
 ```xml
     <!-- Text of the message nn the Implied Consent screen. -->
@@ -323,7 +322,7 @@ To change the message on the Consent screen, add the applicable string parameter
     <string name="evidon_manage_preferences_explicit_message">This app uses technologies so that we, and our partners, can remember you and understand how you use our app. To see a list of these technologies and choose whether they can be used, please manage your preferences.\n\nBefore proceeding, you must accept, decline or manage your privacy preferences below.</string>
 ```
 
-###Theme Customization:
+### Theme Customization:
 To change the theme of the App Notice SDK between light (default) and dark, add one of the following style parameter to your app's style resource file:
 ```xml
 	<!-- Light Theme (default) -->
@@ -334,7 +333,7 @@ To change the theme of the App Notice SDK between light (default) and dark, add 
     <style name="evidon_AppNoticeTheme" parent="evidon_AppNoticeTheme.Base.Dark" />
 ```
 
-###Color Customization:
+### Color Customization:
 To change the color of various elements in the App Notice SDK using Material Design colors, add one or more of the following color parameters to your app's color resource file and customize the colors as desired:
 ```xml
     <!-- Evidon SDK colors - light theme -->
@@ -356,10 +355,10 @@ To change the color of various elements in the App Notice SDK using Material Des
     <color name="evidonColorPrivacyTools">#9FA2A4</color>
 ```
 
-###Advanced Customization:
+### Advanced Customization:
 Almost all elements in the App Notice SDK UI are customizable by overiding elements in the SDK's resource files. To get full access to all of the SDK resource files, contact your Evidon Customer Support Manager (CSM). Evidon does not support problems caused by this level of customization...proceed at your own risk.
 
-###SDK Configuration Parameters:
+### SDK Configuration Parameters:
 These configuration parameters may be used to modify how the App Notice SDK operates. If you include any of these parameters in your config.xml file, your specified value will override the default value specified in the SDK. The values shown below are the default values.
 
 ```xml
@@ -376,7 +375,7 @@ These configuration parameters may be used to modify how the App Notice SDK oper
     <integer name="evidon_http_read_timeout">10000</integer>
 ```
 
-##Troubleshooting
+## Troubleshooting
 * If your app has a mismatch between the Android target SDK (targetSdkVersion) and the Android build libraries (buildToolsVersion), and you are using ProGuard in your app, you may see a compiler warning about not being able to find the referenced method 'android.content.res.ColorStateList getColorStateList'. In this case, you will need to add this line to your ProGuard configuration:
 ```xml
     -dontwarn android.content.res.**
