@@ -1,6 +1,6 @@
 # App Notice SDK for Android<br>Installation and Customization
 *Current version: [v2.2.0][version]*  
-Last updated: April 20, 2017
+Last updated: April 25, 2017
 
 
 ## Prerequisites
@@ -255,13 +255,13 @@ import com.evidon.privacy.appnoticesdk.callbacks.AppNotice_Callback;
       * **onTrackerStateChanged**: This method is called by the SDK when the app-user is finished managing their privacy preferences on the Manage Preferences screen and navigates back your app. This method has this parameter:
         * HashMap<Integer, Boolean> trackerHashMap: A key/value map of all defined non-essential trackers. The key is the tracker ID and the value is true if the tracker is on and false if the tracker is off.
 
-  7.	In your callback methods, add code to handle responses as needed.
+  7. In your callback methods, add code to handle responses as needed.
       * In the case where App Notice process returns true (accepted), you should handle the tracker information returned in the trackerPreferences map. Only enable/start tracking for trackers that are enabled, and disable/don’t start tracking for trackers that are disabled.
       * **Note:** In the case where the app-user declines the explicit notice, they are blocked from entering the app, so the App Notice process never returns false (declined).
       * In the case where onTrackerStateChanged is called and the app has already started trackers that are not turned off, either turn them off at this point, or inform the user that the applicable trackers will be disabled when the app is next started.
       * Notice that the provided sample code above, the code to initialize AdMob, has been moved into a new manageTrackers method to facilitate the various ways it can be managed. It also includes an example of how to turn this tracker off.
 
-  8.	The AppNotice constructor takes these parameters:
+  8. The AppNotice constructor takes these parameters:
       * *FragmentActivity* **activity**: This is your activity from which this method is being called, usually your main/start-up activity. It will usually be “this” or “this.getActivity”. This can also be subclasses of FragmentActivity, like AppCompatActivity or ActionBarActivity.
       * *String* **appNoticeToken**: The notice token for the configuration created for this app.
       * *AppNotice_Callback* **appNotice_callback**: Your app will need to instantiate an AppNotice_Callback object from the SDK and override it's callback methods as described above.
